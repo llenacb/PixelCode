@@ -14,6 +14,11 @@ export interface RunHandle {
   stop(): void;
 }
 
+export interface InterpreterExtras {
+  nextCostume(): void | Promise<void>;
+  playSound(name?: string): void | Promise<void>;
+}
+
 function sleep(ms: number, stillRunning: () => boolean): Promise<void> {
   return new Promise((resolve) => {
     const start = performance.now();
@@ -28,7 +33,7 @@ function sleep(ms: number, stillRunning: () => boolean): Promise<void> {
   });
 }
 
-function playBeep() {
+export function playBeep() {
   try {
     const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
     const ctx = new AudioCtx();
@@ -43,7 +48,12 @@ function playBeep() {
   }
 }
 
-export function runProgram(code: string, stage: StageHandle, onFinished?: () => void): RunHandle {
+export function runProgram(
+  code: string,
+  stage: StageHandle,
+  extras: InterpreterExtras,
+  onFinished?: () => void,
+): RunHandle {
   let running = true;
   const isRunning = () => running;
 
@@ -84,8 +94,11 @@ export function runProgram(code: string, stage: StageHandle, onFinished?: () => 
       // gets a chance to notice `running` flipping to false.
       await sleep(16, isRunning);
     },
-    async playSound() {
-      playBeep();
+    async nextCostume() {
+      await extras.nextCostume();
+    },
+    async playSound(name?: string) {
+      await extras.playSound(name);
     },
   };
 

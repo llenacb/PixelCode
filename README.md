@@ -4,10 +4,11 @@ A block-based creative coding platform for kids, built to serve multiple
 schools from one shared codebase (see `src/types.ts` for the multi-tenant
 data model and `firestore.rules` for how school isolation is enforced).
 
-## Status: Weeks 1-5 (Foundation + Core editor)
+## Status: Weeks 1-7 (Foundation + Core editor + Sprite/sound tools)
 
 Done:
-- Multi-tenant data model (`School`, `UserProfile`, `CodingProject`, `Lesson`)
+- Multi-tenant data model (`School`, `UserProfile`, `CodingProject`,
+  `Costume`, `SoundAsset`, `Lesson`)
 - Firestore + Storage security rules enforcing per-school isolation via
   Auth custom claims (`role`, `schoolId`)
 - Cloud Functions: `syncUserClaims` (keeps claims in sync with each
@@ -20,10 +21,18 @@ Done:
   Run/Stop (`src/lib/interpreter.ts`) and Save/Load of a student's project
   to Firestore. Lazy-loaded (`React.lazy`) so its ~1MB of dependencies
   (Blockly + PixiJS) only load for students, not every role.
+- Sprite & sound tools (`src/components/AssetPanel.tsx`): upload a custom
+  costume image or pick from 3 built-in mascot costumes, switch between
+  them (also reachable from a `next costume` block), and upload sounds
+  that appear as live options in the `play sound` block's dropdown.
+  Uploads go to Firebase Storage at
+  `submissions/{schoolId}/{studentUid}/default/{kind}-{timestamp}-{filename}`
+  ('default' stands in for a real per-project path until multi-project
+  support exists) -- this path shape must stay in sync with the pattern
+  in `storage.rules` or uploads silently fail with permission-denied.
 
-Not yet built (upcoming phases): sprite library / costume uploads, sound
-uploads, the lesson content system, and the teacher/school-admin views
-(currently just a placeholder screen).
+Not yet built (upcoming phases): the lesson content system, and the
+teacher/school-admin views (currently just a placeholder screen).
 
 ## Setup
 

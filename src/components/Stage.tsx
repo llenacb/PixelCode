@@ -22,6 +22,7 @@ export interface StageHandle {
   setRotationDeg(deg: number): void;
   setVisible(visible: boolean): void;
   setSpeech(text: string | null): void;
+  setCostume(url: string): Promise<void>;
   reset(): void;
 }
 
@@ -123,6 +124,20 @@ export const Stage = forwardRef<StageHandle>((_, ref) => {
       } else {
         speech.visible = false;
       }
+    },
+
+    async setCostume(url) {
+      const sprite = spriteRef.current;
+      if (!sprite) return;
+      const texture = await Assets.load(url);
+      sprite.texture = texture;
+      // Costumes can be any aspect ratio -- keep the sprite's longest side
+      // at 120px rather than stretching it, so uploaded images don't look
+      // distorted next to the built-in square mascot costumes.
+      const { width, height } = texture;
+      const scale = 120 / Math.max(width, height);
+      sprite.width = width * scale;
+      sprite.height = height * scale;
     },
 
     reset() {

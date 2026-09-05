@@ -45,6 +45,20 @@ export interface UserProfile {
   photoURL?: string;
 }
 
+/** One image a sprite can wear. Built-in costumes point at files already in
+ *  /public/mascot; uploaded ones point at a Firebase Storage download URL. */
+export interface Costume {
+  id: string;
+  name: string;
+  url: string;
+}
+
+export interface SoundAsset {
+  id: string;
+  name: string;
+  url: string;
+}
+
 /** A student's saved coding project -- the core save/progress unit. */
 export interface CodingProject {
   id: string;
@@ -56,6 +70,9 @@ export interface CodingProject {
   /** Sprite/stage state: costumes, positions, sounds -- shape finalized
    *  alongside the PixiJS runtime in the next build phase. */
   stageState: object;
+  costumes: Costume[];
+  currentCostumeIndex: number;
+  sounds: SoundAsset[];
   lessonId?: string; // set if this project was started from a lesson
   createdAt: string;
   updatedAt: string;

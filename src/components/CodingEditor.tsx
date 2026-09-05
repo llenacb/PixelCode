@@ -4,10 +4,13 @@ import { javascriptGenerator } from 'blockly/javascript';
 import 'blockly/blocks'; // built-in math_number, math_arithmetic, text blocks used in the toolbox
 import { collection, addDoc, updateDoc, doc, query, where, limit, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { TOOLBOX_XML } from '@/lib/blocklyBlocks';
-import { runProgram, type RunHandle } from '@/lib/interpreter';
+import { TOOLBOX_XML, setAvailableSounds } from '@/lib/blocklyBlocks';
+import { runProgram, playBeep, type RunHandle } from '@/lib/interpreter';
 import { Stage, type StageHandle } from '@/components/Stage';
-import type { UserProfile } from '@/types';
+import { AssetPanel } from '@/components/AssetPanel';
+import type { UserProfile, Costume, SoundAsset } from '@/types';
+
+const DEFAULT_COSTUME: Costume = { id: 'default', name: 'Robot', url: '/mascot/robot_3.png' };
 
 export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) => {
   const blocklyHostRef = useRef<HTMLDivElement>(null);
@@ -20,6 +23,9 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
   const [status, setStatus] = useState<string | null>(null);
   const [title, setTitle] = useState('My first project');
   const [isLoaded, setIsLoaded] = useState(false);
+  const [costumes, setCostumes] = useState<Costume[]>([DEFAULT_COSTUME]);
+  const [currentCostumeIndex, setCurrentCostumeIndex] = useState(0);
+  const [sounds, setSounds] = useState<SoundAsset[]>([]);
 
   // Set up the Blockly workspace once.
   useEffect(() => {
@@ -56,12 +62,20 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
         } catch (err) {
           console.error('PixelCode: could not load saved blocks', err);
         }
+        const loadedCostumes: Costume[] = data.costumes?.length ? data.costumes : [DEFAULT_COSTUME];
+        const loadedIndex = data.currentCostumeIndex ?? 0;
+        setCostumes(loadedCostumes);
+        setCurrentCostumeIndex(loadedIndex);
+        setSounds(data.sounds || []);
+
         const saved = data.stageState;
         if (saved && stageRef.current) {
           stageRef.current.setPosition(saved.x ?? 0, saved.y ?? 0);
           stageRef.current.setRotationDeg(saved.rotationDeg ?? 0);
           stageRef.current.setVisible(saved.visible ?? true);
         }
+        const costumeUrl = loadedCostumes[loadedIndex]?.url;
+        if (costumeUrl) await stageRef.current?.setCostume(costumeUrl);
       }
       setIsLoaded(true);
     })();
@@ -70,6 +84,24 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspaceRef.current]);
 
+  // Keep the sound_play block's dropdown in sync with the current sound list.
+  useEffect(() => {
+    setAvailableSounds(sounds);
+  }, [sounds]);
+
+  const playSoundById = (id: string | undefined) => {
+    if (!id || id === '__beep__') {
+      playBeep();
+      return;
+    }
+    const sound = sounds.find((s) => s.id === id);
+    if (sound) {
+      new Audio(sound.url).play().catch(() => {});
+    } else {
+      playBeep(); // referenced sound was since removed -- fall back rather than silently do nothing
+    }
+  };
+
   const handleRun = () => {
     const workspace = workspaceRef.current;
     const stage = stageRef.current;
@@ -77,7 +109,22 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
     setStatus(null);
     const code = javascriptGenerator.workspaceToCode(workspace);
     setIsRunning(true);
-    runHandleRef.current = runProgram(code, stage, () => setIsRunning(false));
+    runHandleRef.current = runProgram(
+      code,
+      stage,
+      {
+        nextCostume: async () => {
+          setCurrentCostumeIndex((prev) => {
+            const next = costumes.length ? (prev + 1) % costumes.length : 0;
+            const url = costumes[next]?.url;
+            if (url) stage.setCostume(url);
+            return next;
+          });
+        },
+        playSound: (name) => playSoundById(name),
+      },
+      () => setIsRunning(false),
+    );
   };
 
   const handleStop = () => {
@@ -96,13 +143,13 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
       const now = new Date().toISOString();
       if (projectDocIdRef.current) {
         await updateDoc(doc(db, 'codingProjects', projectDocIdRef.current), {
-          title, blocklyState, stageState, updatedAt: now,
+          title, blocklyState, stageState, costumes, currentCostumeIndex, sounds, updatedAt: now,
         });
       } else {
         const ref = await addDoc(collection(db, 'codingProjects'), {
           studentId: profile.id,
           schoolId: profile.schoolId,
-          title, blocklyState, stageState,
+          title, blocklyState, stageState, costumes, currentCostumeIndex, sounds,
           createdAt: now, updatedAt: now,
         });
         projectDocIdRef.current = ref.id;
@@ -111,6 +158,20 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
     } catch (err: any) {
       setStatus(`Couldn\u2019t save: ${err.message}`);
     }
+  };
+
+  const handleSelectCostume = async (index: number) => {
+    setCurrentCostumeIndex(index);
+    const url = costumes[index]?.url;
+    if (url) await stageRef.current?.setCostume(url);
+  };
+
+  const handleAddCostume = (costume: Costume) => {
+    setCostumes((prev) => [...prev, costume]);
+  };
+
+  const handleAddSound = (sound: SoundAsset) => {
+    setSounds((prev) => [...prev, sound]);
   };
 
   return (
@@ -139,6 +200,17 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
           <Stage ref={stageRef} />
         </div>
         <div ref={blocklyHostRef} style={styles.blocklyHost} />
+        <AssetPanel
+          schoolId={profile.schoolId}
+          studentId={profile.id}
+          costumes={costumes}
+          currentCostumeIndex={currentCostumeIndex}
+          onSelectCostume={handleSelectCostume}
+          onAddCostume={handleAddCostume}
+          sounds={sounds}
+          onAddSound={handleAddSound}
+          onPlaySound={(s) => playSoundById(s.id)}
+        />
       </div>
     </div>
   );

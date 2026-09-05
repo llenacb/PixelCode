@@ -123,6 +123,16 @@ Blockly.Blocks['looks_hide'] = {
 };
 javascriptGenerator.forBlock['looks_hide'] = () => 'await api.hide();\n';
 
+Blockly.Blocks['looks_nextcostume'] = {
+  init() {
+    this.appendDummyInput().appendField('next costume');
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setColour(LOOKS_COLOUR);
+  },
+};
+javascriptGenerator.forBlock['looks_nextcostume'] = () => 'await api.nextCostume();\n';
+
 Blockly.Blocks['control_wait'] = {
   init() {
     this.appendValueInput('SECS').setCheck('Number').appendField('wait');
@@ -166,16 +176,34 @@ javascriptGenerator.forBlock['control_forever'] = (block, gen) => {
   return `while (api.isRunning()) {\n${body}  await api.tick();\n}\n`;
 };
 
+// Populated by CodingEditor whenever the student's sound list changes.
+// Blockly's FieldDropdown re-invokes this function every time the dropdown
+// is opened, so it always reflects the current list without needing to
+// rebuild any blocks already on the workspace.
+let availableSoundOptions: [string, string][] = [['(beep)', '__beep__']];
+
+export function setAvailableSounds(sounds: { id: string; name: string }[]) {
+  availableSoundOptions = [
+    ['(beep)', '__beep__'],
+    ...sounds.map((s): [string, string] => [s.name, s.id]),
+  ];
+}
+
 Blockly.Blocks['sound_play'] = {
   init() {
-    this.appendDummyInput().appendField('play sound: pop');
+    this.appendDummyInput()
+      .appendField('play sound')
+      .appendField(new Blockly.FieldDropdown(() => availableSoundOptions), 'SOUND');
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setColour(SOUND_COLOUR);
-    this.setTooltip('Sound library comes in a later build phase -- this plays a built-in beep for now.');
+    this.setTooltip('Upload sounds from the Sounds panel to add more options here.');
   },
 };
-javascriptGenerator.forBlock['sound_play'] = () => 'await api.playSound();\n';
+javascriptGenerator.forBlock['sound_play'] = (block) => {
+  const soundId = block.getFieldValue('SOUND');
+  return `await api.playSound(${JSON.stringify(soundId)});\n`;
+};
 
 export const TOOLBOX_XML = `
 <xml>
@@ -198,6 +226,7 @@ export const TOOLBOX_XML = `
     </block>
     <block type="looks_show"></block>
     <block type="looks_hide"></block>
+    <block type="looks_nextcostume"></block>
   </category>
   <category name="Control" colour="${CONTROL_COLOUR}">
     <block type="control_wait"><value name="SECS"><shadow type="math_number"><field name="NUM">1</field></shadow></value></block>
