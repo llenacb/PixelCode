@@ -25,20 +25,20 @@ interface TourStep {
 
 const TOUR_STEPS: TourStep[] = [
   {
-    instruction: "Drag the \u201cwhen \u25b6 clicked\u201d block onto the canvas.",
+    instruction: "Click the Events category in the toolbox, then drag the \u201cwhen \u25b6 clicked\u201d block onto the canvas.",
     expectedBlockType: 'event_whenflagclicked',
     categoryName: 'Events',
     categoryColor: '#FFAB19',
   },
   {
-    instruction: "Drag a \u201cmove steps\u201d block so it snaps right underneath.",
+    instruction: "Click Motion in the toolbox, then drag a \u201cmove steps\u201d block so it snaps right underneath.",
     expectedBlockType: 'motion_movesteps',
     requireConnected: true,
     categoryName: 'Motion',
     categoryColor: '#4C97FF',
   },
   {
-    instruction: "Drag a \u201csay\u201d block and snap it under that.",
+    instruction: "Click Looks in the toolbox, then drag a \u201csay\u201d block and snap it under that.",
     expectedBlockType: 'looks_say',
     requireConnected: true,
     categoryName: 'Looks',
@@ -126,7 +126,6 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ workspace, onClose }) =>
         <button style={styles.stepClose} onClick={onClose} aria-label="Close tour">×</button>
       </div>
       <div style={styles.stepPointerRow}>
-        <span className="pixelcode-pointer-arrow" style={styles.pointerArrow}>←</span>
         <span style={{ ...styles.categorySwatch, background: step.categoryColor }} />
         <span style={styles.categoryLabel}>{step.categoryName}</span>
       </div>
@@ -165,7 +164,7 @@ const styles: Record<string, React.CSSProperties> = {
     // Positioned past the fixed-width Stage panel (480px + 32px padding)
     // so it sits right next to the toolbox categories it's pointing at,
     // rather than floating over the stage area.
-    position: 'absolute', top: 16, left: 610, zIndex: 1000, width: 280,
+    position: 'absolute', bottom: 16, left: 16, zIndex: 1000, width: 280,
     background: 'var(--surface-card)', borderRadius: 14, padding: 16,
     boxShadow: '0 12px 32px rgba(0,0,0,0.18)', border: '1px solid var(--border)',
     pointerEvents: 'none', // lets clicks pass through to the toolbox underneath
@@ -177,7 +176,6 @@ const styles: Record<string, React.CSSProperties> = {
     pointerEvents: 'auto', // the close button itself still needs to be clickable
   },
   stepPointerRow: { display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 },
-  pointerArrow: { fontSize: 16, color: 'var(--violet)' },
   categorySwatch: { width: 10, height: 10, borderRadius: 3, flexShrink: 0 },
   categoryLabel: { fontSize: 12, fontWeight: 600, color: 'var(--ink)' },
   stepInstruction: { fontSize: 14, lineHeight: 1.5, color: 'var(--ink)', margin: 0 },
