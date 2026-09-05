@@ -1,0 +1,106 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --- Auth helpers -------------------------------------------------
+    // Role and schoolId are read from Firebase Auth custom claims, NOT
+    // from a Firestore get() lookup. A get()-based check re-runs per
+    // document touched by a query and blows past Firestore's ~10
+    // get()/exists()-per-query limit on any broad query (e.g. a school
+    // admin listing all of their school's students). Claims cost nothing
+    // per document, so this scales regardless of query size. Claims are
+    // kept in sync with each user's Firestore profile by
+    // functions/index.js's syncUserClaims trigger -- never by hand.
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function myRole() {
+      return request.auth.token.role;
+    }
+    function mySchoolId() {
+      return request.auth.token.schoolId;
+    }
+    function isSuperadmin() {
+      return isSignedIn() && myRole() == 'superadmin';
+    }
+    function isSchoolAdmin() {
+      return isSignedIn() && myRole() == 'schoolAdmin';
+    }
+    function isStaffOfSchool(schoolId) {
+      return isSignedIn()
+        && myRole() in ['schoolAdmin', 'teacher']
+        && mySchoolId() == schoolId;
+    }
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // --- schools/{schoolId} --------------------------------------------
+    // Only superadmin creates/edits schools. Any signed-in staff of that
+    // school can read their own school's doc (for display name etc.);
+    // superadmin can read all.
+    match /schools/{schoolId} {
+      allow read: if isSuperadmin() || isStaffOfSchool(schoolId);
+      allow create, update, delete: if isSuperadmin();
+    }
+
+    // --- users/{userId} --------------------------------------------------
+    // A user always reads their own profile. Staff can read profiles
+    // within their OWN school only (never another school's). Superadmin
+    // reads everything. There is no public self-signup: only superadmin
+    // or a schoolAdmin (for their own school) can create accounts.
+    match /users/{userId} {
+      allow read: if isOwner(userId)
+                     || isSuperadmin()
+                     || (isSignedIn() && myRole() in ['schoolAdmin', 'teacher']
+                         && mySchoolId() == resource.data.schoolId);
+
+      allow create: if isSuperadmin()
+                       || (isSchoolAdmin()
+                           && request.resource.data.schoolId == mySchoolId()
+                           && request.resource.data.role in ['teacher', 'student']);
+
+      // Students may only touch their own display fields on their own
+      // profile -- never role/schoolId (that would be a privilege
+      // escalation / tenant-hop). Staff can update profiles within their
+      // own school; superadmin can update anything.
+      allow update: if isSuperadmin()
+                       || (isSchoolAdmin() && mySchoolId() == resource.data.schoolId)
+                       || (isOwner(userId)
+                           && request.resource.data.diff(resource.data).affectedKeys()
+                                .hasOnly(['name', 'photoURL', 'lastActive']));
+
+      allow delete: if isSuperadmin()
+                       || (isSchoolAdmin() && mySchoolId() == resource.data.schoolId);
+    }
+
+    // --- codingProjects/{projectId} --------------------------------------
+    // A student owns and can fully manage their own projects. Teachers/
+    // schoolAdmins of the SAME school can read (not write) their
+    // students' projects, for review. Superadmin reads all (support).
+    match /codingProjects/{projectId} {
+      allow read: if isSuperadmin()
+                     || isOwner(resource.data.studentId)
+                     || isStaffOfSchool(resource.data.schoolId);
+
+      allow create: if isSignedIn()
+                       && myRole() == 'student'
+                       && request.resource.data.studentId == request.auth.uid
+                       && request.resource.data.schoolId == mySchoolId();
+
+      allow update, delete: if isSuperadmin()
+                                || (isOwner(resource.data.studentId)
+                                    && request.resource.data.schoolId == resource.data.schoolId
+                                    && request.resource.data.studentId == resource.data.studentId);
+    }
+
+    // --- lessons/{lessonId} -----------------------------------------------
+    // Curriculum is global, not school-scoped (see types.ts). Every
+    // signed-in user can read published lessons; only superadmin authors
+    // them.
+    match /lessons/{lessonId} {
+      allow read: if isSignedIn() && (resource.data.published == true || isSuperadmin());
+      allow write: if isSuperadmin();
+    }
+  }
+}

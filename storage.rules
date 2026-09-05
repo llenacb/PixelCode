@@ -1,0 +1,19 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Student-uploaded assets for their own projects (sprite images,
+    // sounds). Path encodes schoolId so a storage browse/list by school
+    // is possible later without a Firestore round-trip.
+    // submissions/{schoolId}/{studentUid}/{projectId}/{fileName}
+    match /submissions/{schoolId}/{studentUid}/{projectId}/{fileName} {
+      allow write: if request.auth != null
+                      && request.auth.uid == studentUid
+                      && request.auth.token.schoolId == schoolId;
+      allow read: if request.auth != null
+                     && (request.auth.uid == studentUid
+                         || (request.auth.token.schoolId == schoolId
+                             && request.auth.token.role in ['teacher', 'schoolAdmin'])
+                         || request.auth.token.role == 'superadmin');
+    }
+  }
+}

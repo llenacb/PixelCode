@@ -1,0 +1,41 @@
+:root {
+  --plum: #3B0F5C;
+  --violet: #6D28D9;
+  --magenta: #C026D3;
+  --pink: #EC4899;
+  --surface: #FAF8FC;
+  --surface-card: #FFFFFF;
+  --ink: #221338;
+  --ink-muted: #6B5C80;
+  --border: #E5DEEE;
+  --danger: #DC2626;
+  --font-display: 'Fredoka', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin: 0;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+input {
+  font-family: var(--font-body);
+}
