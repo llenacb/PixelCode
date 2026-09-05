@@ -139,7 +139,7 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ workspace, onClose }) =>
 const styles: Record<string, React.CSSProperties> = {
   overlay: {
     position: 'absolute', inset: 0, background: 'rgba(34, 19, 56, 0.5)',
-    display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 20,
+    display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
   },
   welcomeCard: {
     width: 420, maxWidth: '90vw', borderRadius: 20, overflow: 'hidden',
@@ -165,7 +165,7 @@ const styles: Record<string, React.CSSProperties> = {
     // Positioned past the fixed-width Stage panel (480px + 32px padding)
     // so it sits right next to the toolbox categories it's pointing at,
     // rather than floating over the stage area.
-    position: 'absolute', top: 16, left: 528, zIndex: 20, width: 280,
+    position: 'absolute', top: 16, left: 528, zIndex: 1000, width: 280,
     background: 'var(--surface-card)', borderRadius: 14, padding: 16,
     boxShadow: '0 12px 32px rgba(0,0,0,0.18)', border: '1px solid var(--border)',
   },

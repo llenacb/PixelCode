@@ -93,7 +93,7 @@ export const LessonPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 const styles: Record<string, React.CSSProperties> = {
   overlay: {
     position: 'absolute', inset: 0, background: 'rgba(34, 19, 56, 0.35)',
-    display: 'flex', alignItems: 'stretch', zIndex: 10,
+    display: 'flex', alignItems: 'stretch', zIndex: 1000,
   },
   panel: {
     width: 420, maxWidth: '90vw', background: 'var(--surface-card)',
