@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { httpsCallable } from 'firebase/functions';
-import { db, functions } from '@/lib/firebase';
+import { signOut } from 'firebase/auth';
+import { auth, db, functions } from '@/lib/firebase';
 import type { School, UserRole } from '@/types';
 
 const createSchool = httpsCallable(functions, 'createSchool');
@@ -62,8 +63,11 @@ export const SuperadminDashboard: React.FC = () => {
   return (
     <div style={styles.page}>
       <header style={styles.header}>
-        <img src="/mascot/robot_2.png" alt="" style={styles.headerMascot} />
-        <h1 style={styles.h1}>PixelCode — superadmin</h1>
+        <div style={styles.headerLeft}>
+          <img src="/mascot/robot_2.png" alt="" style={styles.headerMascot} />
+          <h1 style={styles.h1}>PixelCode — superadmin</h1>
+        </div>
+        <button style={styles.signOutButton} onClick={() => signOut(auth)}>Sign out</button>
       </header>
 
       {status && <p style={styles.status}>{status}</p>}
@@ -146,8 +150,13 @@ export const SuperadminDashboard: React.FC = () => {
 
 const styles: Record<string, React.CSSProperties> = {
   page: { padding: '32px 40px', maxWidth: 960, margin: '0 auto' },
-  header: { display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 },
+  header: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 },
+  headerLeft: { display: 'flex', alignItems: 'center', gap: 12 },
   headerMascot: { width: 40, height: 40 },
+  signOutButton: {
+    padding: '8px 16px', borderRadius: 8, border: '1px solid var(--border)',
+    background: 'var(--surface-card)', fontSize: 13, fontWeight: 500, color: 'var(--ink-muted)',
+  },
   h1: { fontSize: 22, color: 'var(--ink)' },
   h2: { fontSize: 17, color: 'var(--ink)', marginBottom: 16 },
   status: {
