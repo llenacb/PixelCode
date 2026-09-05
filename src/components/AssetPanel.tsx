@@ -29,6 +29,7 @@ export const AssetPanel: React.FC<AssetPanelProps> = ({
   const costumeFileRef = useRef<HTMLInputElement>(null);
   const soundFileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const uploadFile = async (file: File, kind: 'costume' | 'sound') => {
     // Storage path MUST match storage.rules exactly: it matches
@@ -48,11 +49,13 @@ export const AssetPanel: React.FC<AssetPanelProps> = ({
     e.target.value = '';
     if (!file || !schoolId) return;
     setUploading('costume');
+    setError(null);
     try {
       const url = await uploadFile(file, 'costume');
       onAddCostume({ id: crypto.randomUUID(), name: file.name.replace(/\.[^.]+$/, ''), url });
-    } catch (err) {
+    } catch (err: any) {
       console.error('PixelCode: costume upload failed', err);
+      setError(`Couldn\u2019t upload costume: ${err.code || err.message || 'unknown error'}`);
     } finally {
       setUploading(null);
     }
@@ -63,11 +66,13 @@ export const AssetPanel: React.FC<AssetPanelProps> = ({
     e.target.value = '';
     if (!file || !schoolId) return;
     setUploading('sound');
+    setError(null);
     try {
       const url = await uploadFile(file, 'sound');
       onAddSound({ id: crypto.randomUUID(), name: file.name.replace(/\.[^.]+$/, ''), url });
-    } catch (err) {
+    } catch (err: any) {
       console.error('PixelCode: sound upload failed', err);
+      setError(`Couldn\u2019t upload sound: ${err.code || err.message || 'unknown error'}`);
     } finally {
       setUploading(null);
     }
@@ -84,6 +89,7 @@ export const AssetPanel: React.FC<AssetPanelProps> = ({
 
   return (
     <div style={styles.panel}>
+      {error && <p style={styles.errorBanner}>{error}</p>}
       <section>
         <h3 style={styles.heading}>Costumes</h3>
         <div style={styles.thumbRow}>
@@ -169,6 +175,7 @@ export const AssetPanel: React.FC<AssetPanelProps> = ({
 
 const styles: Record<string, React.CSSProperties> = {
   panel: { width: 220, padding: 16, borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 24, overflowY: 'auto' },
+  errorBanner: { fontSize: 12, color: 'var(--danger)', background: '#FEF2F2', padding: '8px 10px', borderRadius: 8, margin: 0 },
   heading: { fontSize: 14, marginBottom: 10, color: 'var(--ink)' },
   thumbRow: { display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 10 },
   thumbWrap: { position: 'relative' },
