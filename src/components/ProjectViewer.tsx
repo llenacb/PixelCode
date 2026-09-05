@@ -23,6 +23,7 @@ export const ProjectViewer: React.FC<{
     });
     try {
       Blockly.serialization.workspaces.load(project.blocklyState, workspace);
+      workspace.scrollCenter();
     } catch (err) {
       console.error('PixelCode: could not load student project for viewing', err);
     }
