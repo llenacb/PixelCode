@@ -205,8 +205,8 @@ export const SuperadminDashboard: React.FC = () => {
       <section style={styles.contentCard}>
         <h2 style={styles.h2}>Content</h2>
         <p style={styles.hint}>
-          Paste a lesson as JSON (see the placeholder shape) and publish it \u2014
-          it becomes visible to every school\u2019s students immediately.
+          Paste a lesson as JSON (see the placeholder shape) and publish it —
+          it becomes visible to every school's students immediately.
         </p>
         <form onSubmit={handlePublishLesson} style={styles.form}>
           <textarea

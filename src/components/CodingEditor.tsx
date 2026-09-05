@@ -3,7 +3,8 @@ import * as Blockly from 'blockly/core';
 import { javascriptGenerator } from 'blockly/javascript';
 import 'blockly/blocks'; // built-in math_number, math_arithmetic, text blocks used in the toolbox
 import { collection, addDoc, updateDoc, doc, query, where, limit, getDocs } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { signOut } from 'firebase/auth';
+import { auth, db } from '@/lib/firebase';
 import { TOOLBOX_XML, setAvailableSounds } from '@/lib/blocklyBlocks';
 import { runProgram, playBeep, type RunHandle } from '@/lib/interpreter';
 import { Stage, type StageHandle } from '@/components/Stage';
@@ -204,13 +205,14 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
         />
         <div style={styles.headerActions}>
           {status && <span style={styles.status}>{status}</span>}
-          <button onClick={() => setShowLessons(true)} style={styles.lessonsButton}>\ud83d\udcd8 Lessons</button>
+          <button onClick={() => setShowLessons(true)} style={styles.lessonsButton}>📘 Lessons</button>
           <button onClick={handleSave} style={styles.saveButton} disabled={!isLoaded}>Save</button>
           {isRunning ? (
             <button onClick={handleStop} style={styles.stopButton}>Stop</button>
           ) : (
             <button onClick={handleRun} style={styles.runButton} disabled={!isLoaded}>▶ Run</button>
           )}
+          <button onClick={() => signOut(auth)} style={styles.signOutButton}>Sign out</button>
         </div>
       </header>
 
@@ -267,6 +269,10 @@ const styles: Record<string, React.CSSProperties> = {
   lessonsButton: {
     padding: '8px 14px', borderRadius: 8, border: '1px solid var(--border)',
     background: '#fff', fontSize: 14, fontWeight: 500, color: 'var(--ink)',
+  },
+  signOutButton: {
+    padding: '8px 14px', borderRadius: 8, border: '1px solid var(--border)',
+    background: 'transparent', fontSize: 13, fontWeight: 500, color: 'var(--ink-muted)',
   },
   stagePanel: {
     padding: 16, display: 'flex', alignItems: 'flex-start', justifyContent: 'center',

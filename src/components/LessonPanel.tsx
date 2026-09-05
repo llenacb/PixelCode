@@ -31,16 +31,16 @@ export const LessonPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <img src="/mascot/robot_2.png" alt="" style={styles.headerMascot} />
           <h2 style={styles.headerTitle}>{selected ? selected.title : 'Lessons'}</h2>
           {selected && (
-            <button style={styles.backButton} onClick={() => setSelected(null)}>\u2190 All lessons</button>
+            <button style={styles.backButton} onClick={() => setSelected(null)}>← All lessons</button>
           )}
-          <button style={styles.closeButton} onClick={onClose} aria-label="Close lessons">\u00d7</button>
+          <button style={styles.closeButton} onClick={onClose} aria-label="Close lessons">×</button>
         </header>
 
         <div style={styles.body}>
           {!selected && (
             <>
               {lessons.length === 0 && (
-                <p style={styles.emptyHint}>No lessons published yet \u2014 check back soon!</p>
+                <p style={styles.emptyHint}>No lessons published yet — check back soon!</p>
               )}
               {TIER_ORDER.map((tier) => {
                 const tierLessons = lessons.filter((l) => l.tier === tier);
