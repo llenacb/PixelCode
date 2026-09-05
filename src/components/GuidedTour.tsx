@@ -72,7 +72,18 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ workspace, onClose }) =>
     const step = TOUR_STEPS[stepIndex];
     if (!step) return;
 
+    // A single drag fires many workspace-change events in a row (create,
+    // several move events, etc). Without this guard, each one would
+    // independently schedule its own "advance" timer, stacking up several
+    // advances from one drag and overshooting past the last step --
+    // which is exactly what produced the crash (stepIndex pointing past
+    // the end of TOUR_STEPS). Only the FIRST match per step is allowed
+    // to schedule an advance; it resets automatically next time this
+    // effect re-runs for a new step.
+    let hasAdvanced = false;
+
     const checkProgress = () => {
+      if (hasAdvanced) return;
       const matches = workspace
         .getBlocksByType(step.expectedBlockType, false)
         .filter((b) => !preexistingIdsRef.current.has(b.id));
@@ -80,14 +91,12 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ workspace, onClose }) =>
         ? matches.some((b) => b.previousConnection?.targetBlock() != null)
         : matches.length > 0;
       if (found) {
+        hasAdvanced = true;
         setJustCompleted(true);
         setTimeout(() => {
           setJustCompleted(false);
-          if (stepIndex + 1 < TOUR_STEPS.length) {
-            setStepIndex((i) => i + 1);
-          } else {
-            onClose(); // last step done -- hand off to Run on their own
-          }
+          setStepIndex((i) => (i + 1 < TOUR_STEPS.length ? i + 1 : i));
+          if (stepIndex + 1 >= TOUR_STEPS.length) onClose(); // last step done
         }, 900);
       }
     };
@@ -118,6 +127,7 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ workspace, onClose }) =>
   }
 
   const step = TOUR_STEPS[stepIndex];
+  if (!step) return null; // defensive -- should be unreachable now, but never crash instead of just closing quietly
 
   return (
     <div style={styles.stepCard}>
