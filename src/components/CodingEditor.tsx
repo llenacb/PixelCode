@@ -170,6 +170,22 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
     setCostumes((prev) => [...prev, costume]);
   };
 
+  const handleRemoveCostume = async (index: number) => {
+    setCostumes((prev) => prev.filter((_, i) => i !== index));
+    // If we removed the currently-worn costume (or one before it), the
+    // selection needs to shift so it still points at a valid entry --
+    // and the sprite on stage needs to actually reflect that change.
+    setCurrentCostumeIndex((prev) => {
+      const next = index < prev ? prev - 1 : index === prev ? 0 : prev;
+      return next;
+    });
+    const remaining = costumes.filter((_, i) => i !== index);
+    const newIndex = index < currentCostumeIndex ? currentCostumeIndex - 1
+      : index === currentCostumeIndex ? 0 : currentCostumeIndex;
+    const url = remaining[newIndex]?.url;
+    if (url) await stageRef.current?.setCostume(url);
+  };
+
   const handleAddSound = (sound: SoundAsset) => {
     setSounds((prev) => [...prev, sound]);
   };
@@ -207,6 +223,7 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
           currentCostumeIndex={currentCostumeIndex}
           onSelectCostume={handleSelectCostume}
           onAddCostume={handleAddCostume}
+          onRemoveCostume={handleRemoveCostume}
           sounds={sounds}
           onAddSound={handleAddSound}
           onPlaySound={(s) => playSoundById(s.id)}

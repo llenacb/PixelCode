@@ -16,13 +16,14 @@ interface AssetPanelProps {
   currentCostumeIndex: number;
   onSelectCostume: (index: number) => void;
   onAddCostume: (costume: Costume) => void;
+  onRemoveCostume: (index: number) => void;
   sounds: SoundAsset[];
   onAddSound: (sound: SoundAsset) => void;
   onPlaySound: (sound: SoundAsset) => void;
 }
 
 export const AssetPanel: React.FC<AssetPanelProps> = ({
-  schoolId, studentId, costumes, currentCostumeIndex, onSelectCostume, onAddCostume,
+  schoolId, studentId, costumes, currentCostumeIndex, onSelectCostume, onAddCostume, onRemoveCostume,
   sounds, onAddSound, onPlaySound,
 }) => {
   const costumeFileRef = useRef<HTMLInputElement>(null);
@@ -73,6 +74,11 @@ export const AssetPanel: React.FC<AssetPanelProps> = ({
   };
 
   const addBuiltinCostume = (builtin: { name: string; url: string }) => {
+    const existingIndex = costumes.findIndex((c) => c.url === builtin.url);
+    if (existingIndex !== -1) {
+      onSelectCostume(existingIndex); // already have it -- just switch to it, don't duplicate
+      return;
+    }
     onAddCostume({ id: crypto.randomUUID(), name: builtin.name, url: builtin.url });
   };
 
@@ -82,17 +88,28 @@ export const AssetPanel: React.FC<AssetPanelProps> = ({
         <h3 style={styles.heading}>Costumes</h3>
         <div style={styles.thumbRow}>
           {costumes.map((c, i) => (
-            <button
-              key={c.id}
-              onClick={() => onSelectCostume(i)}
-              style={{
-                ...styles.thumbButton,
-                ...(i === currentCostumeIndex ? styles.thumbButtonActive : {}),
-              }}
-              title={c.name}
-            >
-              <img src={c.url} alt={c.name} style={styles.thumbImg} />
-            </button>
+            <div key={c.id} style={styles.thumbWrap}>
+              <button
+                onClick={() => onSelectCostume(i)}
+                style={{
+                  ...styles.thumbButton,
+                  ...(i === currentCostumeIndex ? styles.thumbButtonActive : {}),
+                }}
+                title={c.name}
+              >
+                <img src={c.url} alt={c.name} style={styles.thumbImg} />
+              </button>
+              {costumes.length > 1 && (
+                <button
+                  style={styles.removeButton}
+                  onClick={() => onRemoveCostume(i)}
+                  aria-label={`Remove ${c.name}`}
+                  title="Remove"
+                >
+                  ×
+                </button>
+              )}
+            </div>
           ))}
         </div>
         <div style={styles.addRow}>
@@ -154,12 +171,18 @@ const styles: Record<string, React.CSSProperties> = {
   panel: { width: 220, padding: 16, borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 24, overflowY: 'auto' },
   heading: { fontSize: 14, marginBottom: 10, color: 'var(--ink)' },
   thumbRow: { display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 10 },
+  thumbWrap: { position: 'relative' },
   thumbButton: {
     width: 48, height: 48, borderRadius: 8, border: '2px solid var(--border)',
     background: '#fff', padding: 2, overflow: 'hidden',
   },
   thumbButtonActive: { borderColor: 'var(--violet)' },
   thumbImg: { width: '100%', height: '100%', objectFit: 'contain' },
+  removeButton: {
+    position: 'absolute', top: -6, right: -6, width: 18, height: 18, borderRadius: '50%',
+    border: '1px solid var(--border)', background: '#fff', color: 'var(--ink-muted)',
+    fontSize: 12, lineHeight: 1, padding: 0,
+  },
   addRow: { marginBottom: 10 },
   addButton: {
     width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px dashed var(--border)',
