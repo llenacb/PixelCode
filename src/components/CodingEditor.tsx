@@ -8,6 +8,7 @@ import { TOOLBOX_XML, setAvailableSounds } from '@/lib/blocklyBlocks';
 import { runProgram, playBeep, type RunHandle } from '@/lib/interpreter';
 import { Stage, type StageHandle } from '@/components/Stage';
 import { AssetPanel } from '@/components/AssetPanel';
+import { LessonPanel } from '@/components/LessonPanel';
 import type { UserProfile, Costume, SoundAsset } from '@/types';
 
 const DEFAULT_COSTUME: Costume = { id: 'default', name: 'Robot', url: '/mascot/robot_3.png' };
@@ -26,6 +27,7 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
   const [costumes, setCostumes] = useState<Costume[]>([DEFAULT_COSTUME]);
   const [currentCostumeIndex, setCurrentCostumeIndex] = useState(0);
   const [sounds, setSounds] = useState<SoundAsset[]>([]);
+  const [showLessons, setShowLessons] = useState(false);
 
   // Set up the Blockly workspace once.
   useEffect(() => {
@@ -202,6 +204,7 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
         />
         <div style={styles.headerActions}>
           {status && <span style={styles.status}>{status}</span>}
+          <button onClick={() => setShowLessons(true)} style={styles.lessonsButton}>\ud83d\udcd8 Lessons</button>
           <button onClick={handleSave} style={styles.saveButton} disabled={!isLoaded}>Save</button>
           {isRunning ? (
             <button onClick={handleStop} style={styles.stopButton}>Stop</button>
@@ -212,6 +215,7 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
       </header>
 
       <div style={styles.workArea}>
+        {showLessons && <LessonPanel onClose={() => setShowLessons(false)} />}
         <div style={styles.stagePanel}>
           <Stage ref={stageRef} />
         </div>
@@ -259,7 +263,11 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '8px 20px', borderRadius: 8, border: 'none',
     background: '#E53935', color: '#fff', fontSize: 14, fontWeight: 500,
   },
-  workArea: { display: 'flex', flex: 1, minHeight: 0 },
+  workArea: { display: 'flex', flex: 1, minHeight: 0, position: 'relative' },
+  lessonsButton: {
+    padding: '8px 14px', borderRadius: 8, border: '1px solid var(--border)',
+    background: '#fff', fontSize: 14, fontWeight: 500, color: 'var(--ink)',
+  },
   stagePanel: {
     padding: 16, display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
     background: 'var(--surface)',

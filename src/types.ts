@@ -83,10 +83,24 @@ export interface CodingProject {
 // Week 8 (lesson runner) phase. Placeholder so Project can reference a
 // lessonId with a typed shape ready to extend.
 // ---------------------------------------------------------------------------
+export interface LessonChallenge {
+  title: string;
+  instructions: string;
+}
+
+export interface LessonContent {
+  introTitle: string;
+  introText: string;
+  conceptTitle: string;
+  conceptText: string;
+  challenges: LessonChallenge[];
+}
+
 export interface Lesson {
   id: string;
   title: string;
   tier: 'beginner' | 'intermediate' | 'interaction' | 'advanced';
   order: number;
   published: boolean;
+  content: LessonContent;
 }

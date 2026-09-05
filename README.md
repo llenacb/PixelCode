@@ -4,7 +4,7 @@ A block-based creative coding platform for kids, built to serve multiple
 schools from one shared codebase (see `src/types.ts` for the multi-tenant
 data model and `firestore.rules` for how school isolation is enforced).
 
-## Status: Weeks 1-7 (Foundation + Core editor + Sprite/sound tools)
+## Status: Weeks 1-8 (Foundation + Core editor + Sprite/sound tools + Lessons)
 
 Done:
 - Multi-tenant data model (`School`, `UserProfile`, `CodingProject`,
@@ -14,7 +14,7 @@ Done:
 - Cloud Functions: `syncUserClaims` (keeps claims in sync with each
   user's profile doc), `createSchool`, `provisionUser`
 - Login screen + a superadmin dashboard (create schools, provision
-  accounts)
+  accounts, publish lesson content)
 - Core coding editor (`src/components/CodingEditor.tsx`): a Blockly
   workspace (`src/lib/blocklyBlocks.ts` -- Events, Motion, Looks, Control,
   Sound blocks) driving a PixiJS stage (`src/components/Stage.tsx`), with
@@ -30,9 +30,21 @@ Done:
   ('default' stands in for a real per-project path until multi-project
   support exists) -- this path shape must stay in sync with the pattern
   in `storage.rules` or uploads silently fail with permission-denied.
+- Lesson content system: `lessons` is a global (not per-school)
+  Firestore collection, authored once by superadmin and visible to every
+  school's students. `src/components/LessonPanel.tsx` is a slide-over
+  panel (toggled from the editor header) listing published lessons by
+  tier, showing each one's intro/concept/challenge content -- the same
+  hook-concept-challenge pacing pattern found in reference curricula, but
+  with entirely original PixelCode content and characters. Superadmin
+  publishes lessons via a JSON-paste importer in the dashboard's new
+  Content section; `docs/sample-lessons.md` has 3 ready-to-paste original
+  Beginner-tier lessons to seed real content for testing.
 
-Not yet built (upcoming phases): the lesson content system, and the
-teacher/school-admin views (currently just a placeholder screen).
+Not yet built (upcoming phase): teacher/school-admin views (currently
+just a placeholder screen), and wiring a lesson's challenge directly into
+starter code in the editor (currently the lesson panel is read-only
+instructions alongside the editor, not an auto-loaded starter project).
 
 ## Setup
 

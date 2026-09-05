@@ -1,12 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { addDoc, collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { httpsCallable } from 'firebase/functions';
 import { signOut } from 'firebase/auth';
 import { auth, db, functions } from '@/lib/firebase';
-import type { School, UserRole } from '@/types';
+import type { Lesson, School, UserRole } from '@/types';
 
 const createSchool = httpsCallable(functions, 'createSchool');
 const provisionUser = httpsCallable(functions, 'provisionUser');
+
+const LESSON_JSON_PLACEHOLDER = `{
+  "title": "Wake Up, Pixel!",
+  "tier": "beginner",
+  "order": 1,
+  "published": true,
+  "content": {
+    "introTitle": "A quiet morning",
+    "introText": "Pixel the robot has been asleep all night. When you press the green flag, it's time to wake up and say hello!",
+    "conceptTitle": "The when-clicked block",
+    "conceptText": "Every script starts with a hat block. The 'when \\u25b6 clicked' block runs everything snapped underneath it the moment you press Run.",
+    "challenges": [
+      { "title": "Say hello", "instructions": "Snap a 'say' block under 'when \\u25b6 clicked' and make Pixel say hi." },
+      { "title": "Take a step", "instructions": "Add a 'move 10 steps' block before the say block, so Pixel walks forward first." }
+    ]
+  }
+}`;
 
 export const SuperadminDashboard: React.FC = () => {
   const [schools, setSchools] = useState<School[]>([]);
@@ -17,12 +34,52 @@ export const SuperadminDashboard: React.FC = () => {
     name: '', email: '', password: '', role: 'schoolAdmin' as UserRole, schoolId: '',
   });
 
+  const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [lessonJson, setLessonJson] = useState('');
+
   useEffect(() => {
     const q = query(collection(db, 'schools'), orderBy('createdAt', 'desc'));
     return onSnapshot(q, (snap) => {
       setSchools(snap.docs.map((d) => ({ id: d.id, ...d.data() } as School)));
     });
   }, []);
+
+  useEffect(() => {
+    return onSnapshot(collection(db, 'lessons'), (snap) => {
+      const list = snap.docs.map((d) => ({ id: d.id, ...d.data() } as Lesson));
+      list.sort((a, b) => a.tier.localeCompare(b.tier) || a.order - b.order);
+      setLessons(list);
+    });
+  }, []);
+
+  const handlePublishLesson = async (e: React.FormEvent) => {
+    e.preventDefault();
+    let parsed: Partial<Omit<Lesson, 'id'>>;
+    try {
+      parsed = JSON.parse(lessonJson);
+    } catch {
+      setStatus('That\u2019s not valid JSON \u2014 check for a missing comma or quote.');
+      return;
+    }
+    if (!parsed.title || !parsed.tier || !parsed.content) {
+      setStatus('Lesson JSON needs at least title, tier, and content.');
+      return;
+    }
+    setStatus('Publishing lesson\u2026');
+    try {
+      await addDoc(collection(db, 'lessons'), {
+        title: parsed.title,
+        tier: parsed.tier,
+        content: parsed.content,
+        order: parsed.order ?? 0,
+        published: parsed.published ?? true,
+      });
+      setLessonJson('');
+      setStatus('Lesson published.');
+    } catch (err: any) {
+      setStatus(`Couldn\u2019t publish lesson: ${err.message}`);
+    }
+  };
 
   const handleCreateSchool = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -144,6 +201,33 @@ export const SuperadminDashboard: React.FC = () => {
           </form>
         </section>
       </div>
+
+      <section style={styles.contentCard}>
+        <h2 style={styles.h2}>Content</h2>
+        <p style={styles.hint}>
+          Paste a lesson as JSON (see the placeholder shape) and publish it \u2014
+          it becomes visible to every school\u2019s students immediately.
+        </p>
+        <form onSubmit={handlePublishLesson} style={styles.form}>
+          <textarea
+            value={lessonJson}
+            onChange={(e) => setLessonJson(e.target.value)}
+            placeholder={LESSON_JSON_PLACEHOLDER}
+            style={styles.textarea}
+            rows={12}
+          />
+          <button type="submit" style={styles.button}>Publish lesson</button>
+        </form>
+        <ul style={styles.list}>
+          {lessons.map((l) => (
+            <li key={l.id} style={styles.listItem}>
+              <span>{l.title} <code style={styles.code}>({l.tier})</code></span>
+              <span style={styles.code}>{l.published ? 'published' : 'draft'}</span>
+            </li>
+          ))}
+          {lessons.length === 0 && <li style={styles.empty}>No lessons published yet.</li>}
+        </ul>
+      </section>
     </div>
   );
 };
@@ -186,4 +270,13 @@ const styles: Record<string, React.CSSProperties> = {
   },
   code: { fontSize: 11, color: 'var(--ink-muted)' },
   empty: { fontSize: 14, color: 'var(--ink-muted)' },
+  contentCard: {
+    marginTop: 24, background: 'var(--surface-card)', border: '1px solid var(--border)',
+    borderRadius: 16, padding: 24,
+  },
+  hint: { fontSize: 13, color: 'var(--ink-muted)', marginTop: -8, marginBottom: 16 },
+  textarea: {
+    fontFamily: 'monospace', fontSize: 12, padding: 12, borderRadius: 8,
+    border: '1px solid var(--border)', outline: 'none', width: '100%', resize: 'vertical',
+  },
 };
