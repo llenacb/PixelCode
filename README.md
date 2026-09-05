@@ -4,7 +4,7 @@ A block-based creative coding platform for kids, built to serve multiple
 schools from one shared codebase (see `src/types.ts` for the multi-tenant
 data model and `firestore.rules` for how school isolation is enforced).
 
-## Status: Weeks 1-2 (Foundation)
+## Status: Weeks 1-5 (Foundation + Core editor)
 
 Done:
 - Multi-tenant data model (`School`, `UserProfile`, `CodingProject`, `Lesson`)
@@ -14,9 +14,15 @@ Done:
   user's profile doc), `createSchool`, `provisionUser`
 - Login screen + a superadmin dashboard (create schools, provision
   accounts)
+- Core coding editor (`src/components/CodingEditor.tsx`): a Blockly
+  workspace (`src/lib/blocklyBlocks.ts` -- Events, Motion, Looks, Control,
+  Sound blocks) driving a PixiJS stage (`src/components/Stage.tsx`), with
+  Run/Stop (`src/lib/interpreter.ts`) and Save/Load of a student's project
+  to Firestore. Lazy-loaded (`React.lazy`) so its ~1MB of dependencies
+  (Blockly + PixiJS) only load for students, not every role.
 
-Not yet built (upcoming phases): the Blockly + PixiJS coding editor,
-sprite/asset tools, the lesson runner, and the teacher/school-admin views
+Not yet built (upcoming phases): sprite library / costume uploads, sound
+uploads, the lesson content system, and the teacher/school-admin views
 (currently just a placeholder screen).
 
 ## Setup

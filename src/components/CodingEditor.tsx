@@ -1,0 +1,179 @@
+import React, { useEffect, useRef, useState } from 'react';
+import * as Blockly from 'blockly/core';
+import { javascriptGenerator } from 'blockly/javascript';
+import 'blockly/blocks'; // built-in math_number, math_arithmetic, text blocks used in the toolbox
+import { collection, addDoc, updateDoc, doc, query, where, limit, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { TOOLBOX_XML } from '@/lib/blocklyBlocks';
+import { runProgram, type RunHandle } from '@/lib/interpreter';
+import { Stage, type StageHandle } from '@/components/Stage';
+import type { UserProfile } from '@/types';
+
+export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) => {
+  const blocklyHostRef = useRef<HTMLDivElement>(null);
+  const workspaceRef = useRef<Blockly.WorkspaceSvg | null>(null);
+  const stageRef = useRef<StageHandle>(null);
+  const runHandleRef = useRef<RunHandle | null>(null);
+  const projectDocIdRef = useRef<string | null>(null);
+
+  const [isRunning, setIsRunning] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
+  const [title, setTitle] = useState('My first project');
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Set up the Blockly workspace once.
+  useEffect(() => {
+    if (!blocklyHostRef.current) return;
+    const workspace = Blockly.inject(blocklyHostRef.current, {
+      toolbox: TOOLBOX_XML,
+      grid: { spacing: 20, length: 3, colour: '#E5DEEE', snap: true },
+      zoom: { controls: true, wheel: true, startScale: 0.9 },
+      trashcan: true,
+    });
+    workspaceRef.current = workspace;
+    return () => workspace.dispose();
+  }, []);
+
+  // Load the student's existing project, if there is one, once the
+  // workspace exists.
+  useEffect(() => {
+    const workspace = workspaceRef.current;
+    if (!workspace) return;
+    (async () => {
+      const q = query(
+        collection(db, 'codingProjects'),
+        where('studentId', '==', profile.id),
+        limit(1),
+      );
+      const snap = await getDocs(q);
+      if (!snap.empty) {
+        const docSnap = snap.docs[0];
+        const data = docSnap.data();
+        projectDocIdRef.current = docSnap.id;
+        setTitle(data.title || 'My first project');
+        try {
+          Blockly.serialization.workspaces.load(data.blocklyState, workspace);
+        } catch (err) {
+          console.error('PixelCode: could not load saved blocks', err);
+        }
+        const saved = data.stageState;
+        if (saved && stageRef.current) {
+          stageRef.current.setPosition(saved.x ?? 0, saved.y ?? 0);
+          stageRef.current.setRotationDeg(saved.rotationDeg ?? 0);
+          stageRef.current.setVisible(saved.visible ?? true);
+        }
+      }
+      setIsLoaded(true);
+    })();
+    // Runs once, after the workspace is created -- the empty dep array is
+    // intentional (workspaceRef itself never changes identity).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [workspaceRef.current]);
+
+  const handleRun = () => {
+    const workspace = workspaceRef.current;
+    const stage = stageRef.current;
+    if (!workspace || !stage || isRunning) return;
+    setStatus(null);
+    const code = javascriptGenerator.workspaceToCode(workspace);
+    setIsRunning(true);
+    runHandleRef.current = runProgram(code, stage, () => setIsRunning(false));
+  };
+
+  const handleStop = () => {
+    runHandleRef.current?.stop();
+    setIsRunning(false);
+  };
+
+  const handleSave = async () => {
+    const workspace = workspaceRef.current;
+    const stage = stageRef.current;
+    if (!workspace || !stage) return;
+    setStatus('Saving\u2026');
+    try {
+      const blocklyState = Blockly.serialization.workspaces.save(workspace);
+      const stageState = stage.getState();
+      const now = new Date().toISOString();
+      if (projectDocIdRef.current) {
+        await updateDoc(doc(db, 'codingProjects', projectDocIdRef.current), {
+          title, blocklyState, stageState, updatedAt: now,
+        });
+      } else {
+        const ref = await addDoc(collection(db, 'codingProjects'), {
+          studentId: profile.id,
+          schoolId: profile.schoolId,
+          title, blocklyState, stageState,
+          createdAt: now, updatedAt: now,
+        });
+        projectDocIdRef.current = ref.id;
+      }
+      setStatus('Saved!');
+    } catch (err: any) {
+      setStatus(`Couldn\u2019t save: ${err.message}`);
+    }
+  };
+
+  return (
+    <div style={styles.page}>
+      <header style={styles.header}>
+        <img src="/mascot/robot_2.png" alt="" style={styles.headerMascot} />
+        <input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          style={styles.titleInput}
+          aria-label="Project title"
+        />
+        <div style={styles.headerActions}>
+          {status && <span style={styles.status}>{status}</span>}
+          <button onClick={handleSave} style={styles.saveButton} disabled={!isLoaded}>Save</button>
+          {isRunning ? (
+            <button onClick={handleStop} style={styles.stopButton}>Stop</button>
+          ) : (
+            <button onClick={handleRun} style={styles.runButton} disabled={!isLoaded}>▶ Run</button>
+          )}
+        </div>
+      </header>
+
+      <div style={styles.workArea}>
+        <div style={styles.stagePanel}>
+          <Stage ref={stageRef} />
+        </div>
+        <div ref={blocklyHostRef} style={styles.blocklyHost} />
+      </div>
+    </div>
+  );
+};
+
+const styles: Record<string, React.CSSProperties> = {
+  page: { display: 'flex', flexDirection: 'column', height: '100vh' },
+  header: {
+    display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px',
+    borderBottom: '1px solid var(--border)', background: 'var(--surface-card)',
+  },
+  headerMascot: { width: 32, height: 32 },
+  titleInput: {
+    fontFamily: 'var(--font-display)', fontSize: 17, fontWeight: 500,
+    border: 'none', outline: 'none', color: 'var(--ink)', background: 'transparent',
+    flex: 1, minWidth: 0,
+  },
+  headerActions: { display: 'flex', alignItems: 'center', gap: 10 },
+  status: { fontSize: 13, color: 'var(--ink-muted)' },
+  saveButton: {
+    padding: '8px 16px', borderRadius: 8, border: '1px solid var(--border)',
+    background: '#fff', fontSize: 14, fontWeight: 500, color: 'var(--ink)',
+  },
+  runButton: {
+    padding: '8px 20px', borderRadius: 8, border: 'none',
+    background: '#4CAF50', color: '#fff', fontSize: 14, fontWeight: 500,
+  },
+  stopButton: {
+    padding: '8px 20px', borderRadius: 8, border: 'none',
+    background: '#E53935', color: '#fff', fontSize: 14, fontWeight: 500,
+  },
+  workArea: { display: 'flex', flex: 1, minHeight: 0 },
+  stagePanel: {
+    padding: 16, display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+    background: 'var(--surface)',
+  },
+  blocklyHost: { flex: 1, minWidth: 0 },
+};

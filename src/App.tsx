@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
@@ -6,6 +6,10 @@ import type { UserProfile } from '@/types';
 import { LoginView } from '@/components/LoginView';
 import { SuperadminDashboard } from '@/components/SuperadminDashboard';
 import { PlaceholderDashboard } from '@/components/PlaceholderDashboard';
+
+const CodingEditor = React.lazy(() =>
+  import('@/components/CodingEditor').then((m) => ({ default: m.CodingEditor })),
+);
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -52,6 +56,14 @@ const App: React.FC = () => {
 
   if (profile.role === 'superadmin') {
     return <SuperadminDashboard />;
+  }
+
+  if (profile.role === 'student') {
+    return (
+      <Suspense fallback={<div style={{ padding: 40, color: 'var(--ink-muted)' }}>Loading editor\u2026</div>}>
+        <CodingEditor profile={profile} />
+      </Suspense>
+    );
   }
 
   return <PlaceholderDashboard profile={profile} />;
