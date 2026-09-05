@@ -72,6 +72,41 @@ exports.createSchool = onCall(async (request) => {
 });
 
 /**
+ * Callable: setStorageCors
+ * Superadmin-only, one-off utility. Firebase Storage's default bucket
+ * configuration doesn't allow cross-origin fetches (e.g. loading an
+ * uploaded image as a PixiJS/WebGL texture from the app's own domain) --
+ * that needs an explicit CORS policy set on the bucket itself, normally
+ * done via the gsutil command-line tool. This does the same thing
+ * through the Admin SDK instead, so it can be triggered from the
+ * dashboard without installing anything extra.
+ *
+ * origin: ['*'] is intentional and safe here -- CORS only controls which
+ * web origins are ALLOWED TO ATTEMPT a request; actual authorization is
+ * still fully enforced server-side by storage.rules regardless of this
+ * setting. Restricting origin wouldn't add security, only friction every
+ * time a new domain (staging, production, a custom domain later) needs
+ * access.
+ */
+exports.setStorageCors = onCall(async (request) => {
+  if (request.auth?.token?.role !== 'superadmin') {
+    throw new HttpsError('permission-denied', 'Only superadmin can run this.');
+  }
+  const bucket = admin.storage().bucket('studio-98257600-1107c.firebasestorage.app');
+  await bucket.setMetadata({
+    cors: [
+      {
+        origin: ['*'],
+        method: ['GET', 'HEAD'],
+        responseHeader: ['Content-Type', 'Access-Control-Allow-Origin'],
+        maxAgeSeconds: 3600,
+      },
+    ],
+  });
+  return { ok: true };
+});
+
+/**
  * Callable: provisionUser
  * Creates a Firebase Auth account plus its users/{uid} profile in one
  * step (the client SDK can't create OTHER users' accounts -- that needs

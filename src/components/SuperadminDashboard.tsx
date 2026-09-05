@@ -7,6 +7,7 @@ import type { Lesson, School, UserRole } from '@/types';
 
 const createSchool = httpsCallable(functions, 'createSchool');
 const provisionUser = httpsCallable(functions, 'provisionUser');
+const setStorageCors = httpsCallable(functions, 'setStorageCors');
 
 const LESSON_JSON_PLACEHOLDER = `{
   "title": "Wake Up, Pixel!",
@@ -51,6 +52,16 @@ export const SuperadminDashboard: React.FC = () => {
       setLessons(list);
     });
   }, []);
+
+  const handleFixStorageCors = async () => {
+    setStatus('Configuring Storage CORS\u2026');
+    try {
+      await setStorageCors({});
+      setStatus('Storage CORS configured \u2014 uploaded images should load correctly now.');
+    } catch (err: any) {
+      setStatus(`Couldn\u2019t configure Storage CORS: ${err.message}`);
+    }
+  };
 
   const handlePublishLesson = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -201,6 +212,15 @@ export const SuperadminDashboard: React.FC = () => {
           </form>
         </section>
       </div>
+
+      <section style={styles.contentCard}>
+        <h2 style={styles.h2}>Storage</h2>
+        <p style={styles.hint}>
+          Uploaded costume/sound images need this run once so PixiJS can load them
+          as textures (a browser CORS requirement, unrelated to Firestore access).
+        </p>
+        <button onClick={handleFixStorageCors} style={styles.button}>Fix Storage CORS</button>
+      </section>
 
       <section style={styles.contentCard}>
         <h2 style={styles.h2}>Content</h2>
