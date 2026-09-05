@@ -171,7 +171,14 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
   const handleSelectCostume = async (index: number) => {
     setCurrentCostumeIndex(index);
     const url = costumes[index]?.url;
-    if (url) await stageRef.current?.setCostume(url);
+    if (url) {
+      try {
+        await stageRef.current?.setCostume(url);
+      } catch (err) {
+        console.error('PixelCode: could not switch costume', err);
+        setStatus('Couldn\u2019t load that costume image on stage.');
+      }
+    }
   };
 
   const handleAddCostume = (costume: Costume) => {
