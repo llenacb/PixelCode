@@ -19,22 +19,30 @@ interface TourStep {
   instruction: string;
   expectedBlockType: string;
   requireConnected?: boolean; // must be snapped under an existing block, not just sitting loose
+  categoryName: string;
+  categoryColor: string;
 }
 
 const TOUR_STEPS: TourStep[] = [
   {
-    instruction: "Click the orange Events category, then drag the \u201cwhen \u25b6 clicked\u201d block onto the canvas.",
+    instruction: "Drag the \u201cwhen \u25b6 clicked\u201d block onto the canvas.",
     expectedBlockType: 'event_whenflagclicked',
+    categoryName: 'Events',
+    categoryColor: '#FFAB19',
   },
   {
-    instruction: "Click Motion (blue), then drag a \u201cmove steps\u201d block so it snaps right underneath.",
+    instruction: "Drag a \u201cmove steps\u201d block so it snaps right underneath.",
     expectedBlockType: 'motion_movesteps',
     requireConnected: true,
+    categoryName: 'Motion',
+    categoryColor: '#4C97FF',
   },
   {
-    instruction: "Click Looks (purple), then drag a \u201csay\u201d block and snap it under that.",
+    instruction: "Drag a \u201csay\u201d block and snap it under that.",
     expectedBlockType: 'looks_say',
     requireConnected: true,
+    categoryName: 'Looks',
+    categoryColor: '#9966FF',
   },
 ];
 
@@ -47,6 +55,17 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ workspace, onClose }) =>
   const [started, setStarted] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
   const [justCompleted, setJustCompleted] = useState(false);
+  const preexistingIdsRef = React.useRef<Set<string>>(new Set());
+
+  const handleStart = () => {
+    // Snapshot every block already on the canvas so the tour only reacts
+    // to blocks the student drags in FROM NOW ON -- otherwise a student
+    // who already has leftover blocks (e.g. from earlier testing) sees
+    // every step "complete" instantly since the blocks already exist,
+    // which is exactly the "too fast" behavior this fixes.
+    preexistingIdsRef.current = new Set(workspace?.getAllBlocks(false).map((b) => b.id) ?? []);
+    setStarted(true);
+  };
 
   useEffect(() => {
     if (!started || !workspace) return;
@@ -54,7 +73,9 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ workspace, onClose }) =>
     if (!step) return;
 
     const checkProgress = () => {
-      const matches = workspace.getBlocksByType(step.expectedBlockType, false);
+      const matches = workspace
+        .getBlocksByType(step.expectedBlockType, false)
+        .filter((b) => !preexistingIdsRef.current.has(b.id));
       const found = step.requireConnected
         ? matches.some((b) => b.previousConnection?.targetBlock() != null)
         : matches.length > 0;
@@ -67,11 +88,10 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ workspace, onClose }) =>
           } else {
             onClose(); // last step done -- hand off to Run on their own
           }
-        }, 700);
+        }, 900);
       }
     };
 
-    checkProgress(); // in case it's already there (e.g. re-opening mid-build)
     workspace.addChangeListener(checkProgress);
     return () => workspace.removeChangeListener(checkProgress);
   }, [started, workspace, stepIndex, onClose]);
@@ -89,7 +109,7 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ workspace, onClose }) =>
               Let's build your very first script together — I'll tell you exactly
               which blocks to drag, one at a time.
             </p>
-            <button style={styles.followButton} onClick={() => setStarted(true)}>Follow me</button>
+            <button style={styles.followButton} onClick={handleStart}>Follow me</button>
             <button style={styles.skipButton} onClick={onClose}>Skip ▶</button>
           </div>
         </div>
@@ -104,6 +124,11 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ workspace, onClose }) =>
       <div style={styles.stepHeader}>
         <span style={styles.stepProgress}>Step {stepIndex + 1} of {TOUR_STEPS.length}</span>
         <button style={styles.stepClose} onClick={onClose} aria-label="Close tour">×</button>
+      </div>
+      <div style={styles.stepPointerRow}>
+        <span className="pixelcode-pointer-arrow" style={styles.pointerArrow}>←</span>
+        <span style={{ ...styles.categorySwatch, background: step.categoryColor }} />
+        <span style={styles.categoryLabel}>{step.categoryName}</span>
       </div>
       <p style={styles.stepInstruction}>{step.instruction}</p>
       {justCompleted && <p style={styles.stepDone}>Nice! ✓</p>}
@@ -137,13 +162,20 @@ const styles: Record<string, React.CSSProperties> = {
     color: 'var(--ink-muted)', fontSize: 13,
   },
   stepCard: {
-    position: 'absolute', top: 16, left: 16, zIndex: 20, width: 300,
+    // Positioned past the fixed-width Stage panel (480px + 32px padding)
+    // so it sits right next to the toolbox categories it's pointing at,
+    // rather than floating over the stage area.
+    position: 'absolute', top: 16, left: 528, zIndex: 20, width: 280,
     background: 'var(--surface-card)', borderRadius: 14, padding: 16,
     boxShadow: '0 12px 32px rgba(0,0,0,0.18)', border: '1px solid var(--border)',
   },
-  stepHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
+  stepHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
   stepProgress: { fontSize: 12, fontWeight: 500, color: 'var(--violet)' },
   stepClose: { border: 'none', background: 'transparent', fontSize: 16, color: 'var(--ink-muted)', lineHeight: 1 },
+  stepPointerRow: { display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 },
+  pointerArrow: { fontSize: 16, color: 'var(--violet)' },
+  categorySwatch: { width: 10, height: 10, borderRadius: 3, flexShrink: 0 },
+  categoryLabel: { fontSize: 12, fontWeight: 600, color: 'var(--ink)' },
   stepInstruction: { fontSize: 14, lineHeight: 1.5, color: 'var(--ink)', margin: 0 },
   stepDone: { fontSize: 13, color: '#16A34A', fontWeight: 500, marginTop: 8, marginBottom: 0 },
 };

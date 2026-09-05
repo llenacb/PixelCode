@@ -39,3 +39,12 @@ button {
 input {
   font-family: var(--font-body);
 }
+
+@keyframes pixelcode-bounce-left {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-6px); }
+}
+.pixelcode-pointer-arrow {
+  display: inline-block;
+  animation: pixelcode-bounce-left 1s infinite;
+}
