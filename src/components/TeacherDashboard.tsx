@@ -42,7 +42,7 @@ export const TeacherDashboard: React.FC<{ profile: UserProfile }> = ({ profile }
       <header style={styles.header}>
         <div style={styles.headerLeft}>
           <img src="/mascot/robot_2.png" alt="" style={styles.headerMascot} />
-          <h1 style={styles.h1}>PixelCode \u2014 {profile.role === 'schoolAdmin' ? 'school admin' : 'teacher'}</h1>
+          <h1 style={styles.h1}>PixelCode — {profile.role === 'schoolAdmin' ? 'school admin' : 'teacher'}</h1>
         </div>
         <button style={styles.signOutButton} onClick={() => signOut(auth)}>Sign out</button>
       </header>
@@ -68,7 +68,7 @@ export const TeacherDashboard: React.FC<{ profile: UserProfile }> = ({ profile }
                   <td style={styles.td}>{s.email}</td>
                   <td style={styles.td}>{project ? project.title : <span style={styles.muted}>No project yet</span>}</td>
                   <td style={styles.td}>
-                    {project ? new Date(project.updatedAt).toLocaleString() : <span style={styles.muted}>\u2014</span>}
+                    {project ? new Date(project.updatedAt).toLocaleString() : <span style={styles.muted}>—</span>}
                   </td>
                   <td style={styles.td}>
                     {project && (

@@ -50,10 +50,25 @@ Done:
   any lesson is good follow-up work. Replayable anytime via the "🎯
   Tutorial" header button.
 
-Not yet built (upcoming phase): teacher/school-admin views (currently
-just a placeholder screen), and wiring a lesson's challenge directly into
-starter code in the editor (currently the lesson panel is read-only
-instructions alongside the editor, not an auto-loaded starter project).
+Not yet built (upcoming phase): lesson-completion tracking (a student's
+project isn't currently linked to which lesson they were working on --
+the teacher dashboard shows their latest saved project, not per-lesson
+progress, since that mapping doesn't exist in the data model yet), and
+wiring a lesson's challenge directly into starter code in the editor.
+
+## Weeks 1-9 status
+
+Everything above through the guided tour is done. Also done:
+- Teacher/school-admin dashboard (`src/components/TeacherDashboard.tsx`):
+  a roster of the signed-in staff member's own school's students (via the
+  same `isStaffOfSchool` Firestore rule from the foundation phase -- no
+  new rules needed), each with their latest saved project and when it was
+  updated. `src/components/ProjectViewer.tsx` opens a read-only look at a
+  student's actual blocks (Blockly in `readOnly` mode) and sprite --
+  staff can see exactly what a student built, not just that they saved
+  something. Lazy-loaded like the student editor, and Vite automatically
+  shares one Blockly/PixiJS bundle between both roles rather than
+  downloading it twice.
 
 ## Setup
 

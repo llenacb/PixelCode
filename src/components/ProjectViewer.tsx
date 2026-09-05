@@ -48,9 +48,9 @@ export const ProjectViewer: React.FC<{
         <header style={styles.header}>
           <div>
             <h2 style={styles.title}>{project.title}</h2>
-            <p style={styles.subtitle}>{student.name} \u00b7 last updated {new Date(project.updatedAt).toLocaleString()}</p>
+            <p style={styles.subtitle}>{student.name} · last updated {new Date(project.updatedAt).toLocaleString()}</p>
           </div>
-          <button style={styles.closeButton} onClick={onClose} aria-label="Close">\u00d7</button>
+          <button style={styles.closeButton} onClick={onClose} aria-label="Close">×</button>
         </header>
         <div style={styles.body}>
           <div style={styles.stageColumn}>
