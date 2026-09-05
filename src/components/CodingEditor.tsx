@@ -11,6 +11,7 @@ import { Stage, type StageHandle } from '@/components/Stage';
 import { AssetPanel } from '@/components/AssetPanel';
 import { LessonPanel } from '@/components/LessonPanel';
 import { GuidedTour } from '@/components/GuidedTour';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import type { UserProfile, Costume, SoundAsset } from '@/types';
 
 const DEFAULT_COSTUME: Costume = { id: 'default', name: 'Robot', url: '/mascot/robot_3.png' };
@@ -222,8 +223,16 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
       </header>
 
       <div style={styles.workArea}>
-        {showLessons && <LessonPanel onClose={() => setShowLessons(false)} />}
-        {showTour && <GuidedTour workspace={workspaceRef.current} onClose={() => setShowTour(false)} />}
+        {showLessons && (
+          <ErrorBoundary label="Lessons">
+            <LessonPanel onClose={() => setShowLessons(false)} />
+          </ErrorBoundary>
+        )}
+        {showTour && (
+          <ErrorBoundary label="Tutorial">
+            <GuidedTour workspace={workspaceRef.current} onClose={() => setShowTour(false)} />
+          </ErrorBoundary>
+        )}
         <div style={styles.stagePanel}>
           <Stage ref={stageRef} />
         </div>

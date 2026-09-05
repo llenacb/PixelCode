@@ -47,7 +47,7 @@ const App: React.FC = () => {
   }, []);
 
   if (isChecking) {
-    return <div style={{ padding: 40, color: 'var(--ink-muted)' }}>Loading\u2026</div>;
+    return <div style={{ padding: 40, color: 'var(--ink-muted)' }}>Loading…</div>;
   }
 
   if (!user || !profile) {
@@ -60,7 +60,7 @@ const App: React.FC = () => {
 
   if (profile.role === 'student') {
     return (
-      <Suspense fallback={<div style={{ padding: 40, color: 'var(--ink-muted)' }}>Loading editor\u2026</div>}>
+      <Suspense fallback={<div style={{ padding: 40, color: 'var(--ink-muted)' }}>Loading editor…</div>}>
         <CodingEditor profile={profile} />
       </Suspense>
     );
