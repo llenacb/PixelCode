@@ -10,6 +10,9 @@ import { PlaceholderDashboard } from '@/components/PlaceholderDashboard';
 const CodingEditor = React.lazy(() =>
   import('@/components/CodingEditor').then((m) => ({ default: m.CodingEditor })),
 );
+const TeacherDashboard = React.lazy(() =>
+  import('@/components/TeacherDashboard').then((m) => ({ default: m.TeacherDashboard })),
+);
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -62,6 +65,14 @@ const App: React.FC = () => {
     return (
       <Suspense fallback={<div style={{ padding: 40, color: 'var(--ink-muted)' }}>Loading editor…</div>}>
         <CodingEditor profile={profile} />
+      </Suspense>
+    );
+  }
+
+  if (profile.role === 'teacher' || profile.role === 'schoolAdmin') {
+    return (
+      <Suspense fallback={<div style={{ padding: 40, color: 'var(--ink-muted)' }}>Loading…</div>}>
+        <TeacherDashboard profile={profile} />
       </Suspense>
     );
   }
