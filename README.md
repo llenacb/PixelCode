@@ -40,6 +40,15 @@ Done:
   publishes lessons via a JSON-paste importer in the dashboard's new
   Content section; `docs/sample-lessons.md` has 3 ready-to-paste original
   Beginner-tier lessons to seed real content for testing.
+- Guided tour (`src/components/GuidedTour.tsx`): an interactive
+  welcome-then-step-by-step walkthrough (own original design, not a copy
+  of any reference tool's onboarding) shown automatically to a first-time
+  student. It watches the live Blockly workspace via a change listener
+  and auto-advances each step the instant the right block actually gets
+  dragged in -- not just static text. Currently hardcoded to the "Wake Up,
+  Pixel!" lesson's exact block sequence; generalizing it to walk through
+  any lesson is good follow-up work. Replayable anytime via the "🎯
+  Tutorial" header button.
 
 Not yet built (upcoming phase): teacher/school-admin views (currently
 just a placeholder screen), and wiring a lesson's challenge directly into

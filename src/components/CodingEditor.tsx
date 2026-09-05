@@ -10,6 +10,7 @@ import { runProgram, playBeep, type RunHandle } from '@/lib/interpreter';
 import { Stage, type StageHandle } from '@/components/Stage';
 import { AssetPanel } from '@/components/AssetPanel';
 import { LessonPanel } from '@/components/LessonPanel';
+import { GuidedTour } from '@/components/GuidedTour';
 import type { UserProfile, Costume, SoundAsset } from '@/types';
 
 const DEFAULT_COSTUME: Costume = { id: 'default', name: 'Robot', url: '/mascot/robot_3.png' };
@@ -29,6 +30,7 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
   const [currentCostumeIndex, setCurrentCostumeIndex] = useState(0);
   const [sounds, setSounds] = useState<SoundAsset[]>([]);
   const [showLessons, setShowLessons] = useState(false);
+  const [showTour, setShowTour] = useState(false);
 
   // Set up the Blockly workspace once.
   useEffect(() => {
@@ -79,6 +81,8 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
         }
         const costumeUrl = loadedCostumes[loadedIndex]?.url;
         if (costumeUrl) await stageRef.current?.setCostume(costumeUrl);
+      } else {
+        setShowTour(true); // no saved project at all -- this is a first-time student
       }
       setIsLoaded(true);
     })();
@@ -206,6 +210,7 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
         <div style={styles.headerActions}>
           {status && <span style={styles.status}>{status}</span>}
           <button onClick={() => setShowLessons(true)} style={styles.lessonsButton}>📘 Lessons</button>
+          <button onClick={() => setShowTour(true)} style={styles.lessonsButton}>🎯 Tutorial</button>
           <button onClick={handleSave} style={styles.saveButton} disabled={!isLoaded}>Save</button>
           {isRunning ? (
             <button onClick={handleStop} style={styles.stopButton}>Stop</button>
@@ -218,6 +223,7 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
 
       <div style={styles.workArea}>
         {showLessons && <LessonPanel onClose={() => setShowLessons(false)} />}
+        {showTour && <GuidedTour workspace={workspaceRef.current} onClose={() => setShowTour(false)} />}
         <div style={styles.stagePanel}>
           <Stage ref={stageRef} />
         </div>
