@@ -80,10 +80,10 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ workspace, onClose }) =>
     return (
       <div style={styles.overlay}>
         <div style={styles.welcomeCard}>
-          <div style={styles.welcomeImageSide}>
+          <div style={styles.welcomeImageBanner}>
             <img src="/mascot/robot_3.png" alt="" style={styles.welcomeMascot} />
           </div>
-          <div style={styles.welcomeTextSide}>
+          <div style={styles.welcomeTextArea}>
             <h2 style={styles.welcomeTitle}>Welcome to PixelCode!</h2>
             <p style={styles.welcomeText}>
               Let's build your very first script together — I'll tell you exactly
@@ -117,15 +117,15 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 20,
   },
   welcomeCard: {
-    display: 'flex', width: 520, maxWidth: '90vw', borderRadius: 20, overflow: 'hidden',
-    boxShadow: '0 24px 60px rgba(0,0,0,0.3)',
+    width: 420, maxWidth: '90vw', borderRadius: 20, overflow: 'hidden',
+    boxShadow: '0 24px 60px rgba(0,0,0,0.3)', background: '#fff',
   },
-  welcomeImageSide: {
-    width: 180, background: 'linear-gradient(160deg, #3B0F5C 0%, #6D28D9 55%, #C026D3 100%)',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
+  welcomeImageBanner: {
+    background: 'linear-gradient(160deg, #3B0F5C 0%, #6D28D9 55%, #C026D3 100%)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '28px 0',
   },
-  welcomeMascot: { width: 120, height: 120 },
-  welcomeTextSide: { flex: 1, background: '#fff', padding: 28 },
+  welcomeMascot: { width: 110, height: 110 },
+  welcomeTextArea: { padding: 28 },
   welcomeTitle: { fontSize: 20, marginBottom: 10, color: 'var(--ink)' },
   welcomeText: { fontSize: 14, lineHeight: 1.6, color: 'var(--ink-muted)', marginBottom: 20 },
   followButton: {
