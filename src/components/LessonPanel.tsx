@@ -52,7 +52,10 @@ export const LessonPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                       {tierLessons.map((l) => (
                         <li key={l.id}>
                           <button style={styles.lessonButton} onClick={() => setSelected(l)}>
-                            {l.title}
+                            <span>{l.title}</span>
+                            {l.suggestedMinutes && (
+                              <span style={styles.lessonTime}>~{l.suggestedMinutes} min</span>
+                            )}
                           </button>
                         </li>
                       ))}
@@ -65,6 +68,9 @@ export const LessonPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
           {selected && (
             <div style={styles.lessonContent}>
+              {selected.suggestedMinutes && (
+                <span style={styles.timeBadge}>⏱ About {selected.suggestedMinutes} minutes</span>
+              )}
               <section style={styles.section}>
                 <h3 style={styles.sectionTitle}>{selected.content.introTitle}</h3>
                 <p style={styles.sectionText}>{selected.content.introText}</p>
@@ -121,8 +127,14 @@ const styles: Record<string, React.CSSProperties> = {
   lessonButton: {
     width: '100%', textAlign: 'left', padding: '10px 12px', borderRadius: 8,
     border: '1px solid var(--border)', background: '#fff', fontSize: 14, color: 'var(--ink)',
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8,
   },
+  lessonTime: { fontSize: 12, color: 'var(--ink-muted)', flexShrink: 0 },
   lessonContent: { display: 'flex', flexDirection: 'column', gap: 20 },
+  timeBadge: {
+    alignSelf: 'flex-start', fontSize: 13, fontWeight: 600, color: 'var(--violet)',
+    background: '#F3E8FF', padding: '6px 12px', borderRadius: 20,
+  },
   section: {},
   sectionTitle: { fontSize: 15, marginBottom: 6, color: 'var(--ink)' },
   sectionText: { fontSize: 14, lineHeight: 1.6, color: 'var(--ink)', margin: 0 },

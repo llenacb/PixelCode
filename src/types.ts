@@ -102,5 +102,11 @@ export interface Lesson {
   tier: 'beginner' | 'intermediate' | 'interaction' | 'advanced';
   order: number;
   published: boolean;
+  /** Rough planning estimate for a teacher scheduling class time -- not
+   *  measured from real classroom data yet (that's what the still-pending
+   *  real-classroom-testing phase would validate), just a reasonable
+   *  starting guess based on the lesson's content. Optional so older
+   *  lessons published before this field existed don't break. */
+  suggestedMinutes?: number;
   content: LessonContent;
 }

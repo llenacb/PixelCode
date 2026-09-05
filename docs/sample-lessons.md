@@ -13,6 +13,7 @@ explanation, then a hands-on challenge or two.
   "title": "Wake Up, Pixel!",
   "tier": "beginner",
   "order": 1,
+  "suggestedMinutes": 15,
   "published": true,
   "content": {
     "introTitle": "A quiet morning",
@@ -34,6 +35,7 @@ explanation, then a hands-on challenge or two.
   "title": "Pixel Takes a Walk",
   "tier": "beginner",
   "order": 2,
+  "suggestedMinutes": 15,
   "published": true,
   "content": {
     "introTitle": "One step is not enough",
@@ -55,6 +57,7 @@ explanation, then a hands-on challenge or two.
   "title": "Pixel's Costume Change",
   "tier": "beginner",
   "order": 3,
+  "suggestedMinutes": 20,
   "published": true,
   "content": {
     "introTitle": "Pixel likes to change outfits",
@@ -76,6 +79,7 @@ explanation, then a hands-on challenge or two.
   "title": "Pixel Says Hi For a While",
   "tier": "beginner",
   "order": 4,
+  "suggestedMinutes": 20,
   "published": true,
   "content": {
     "introTitle": "A message that doesn't disappear too fast",
@@ -97,6 +101,7 @@ explanation, then a hands-on challenge or two.
   "title": "Pixel Goes Exactly There",
   "tier": "beginner",
   "order": 5,
+  "suggestedMinutes": 20,
   "published": true,
   "content": {
     "introTitle": "Moving forward isn't always enough",
@@ -118,6 +123,7 @@ explanation, then a hands-on challenge or two.
   "title": "Pixel Plays a Sound",
   "tier": "beginner",
   "order": 6,
+  "suggestedMinutes": 20,
   "published": true,
   "content": {
     "introTitle": "A quiet stage needs some noise",
@@ -139,6 +145,7 @@ explanation, then a hands-on challenge or two.
   "title": "Hide and Seek",
   "tier": "beginner",
   "order": 7,
+  "suggestedMinutes": 20,
   "published": true,
   "content": {
     "introTitle": "Now you see Pixel, now you don't",
@@ -160,6 +167,7 @@ explanation, then a hands-on challenge or two.
   "title": "Forever Explorer",
   "tier": "beginner",
   "order": 8,
+  "suggestedMinutes": 25,
   "published": true,
   "content": {
     "introTitle": "Pixel never wants to stop patrolling",
@@ -181,6 +189,7 @@ explanation, then a hands-on challenge or two.
   "title": "Add It Up",
   "tier": "beginner",
   "order": 9,
+  "suggestedMinutes": 25,
   "published": true,
   "content": {
     "introTitle": "Pixel likes numbers too",
@@ -202,6 +211,7 @@ explanation, then a hands-on challenge or two.
   "title": "Pixel's Big Adventure",
   "tier": "beginner",
   "order": 10,
+  "suggestedMinutes": 40,
   "published": true,
   "content": {
     "introTitle": "Everything Pixel has learned, all in one script",
