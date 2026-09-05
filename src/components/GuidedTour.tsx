@@ -165,13 +165,17 @@ const styles: Record<string, React.CSSProperties> = {
     // Positioned past the fixed-width Stage panel (480px + 32px padding)
     // so it sits right next to the toolbox categories it's pointing at,
     // rather than floating over the stage area.
-    position: 'absolute', top: 16, left: 528, zIndex: 1000, width: 280,
+    position: 'absolute', top: 16, left: 610, zIndex: 1000, width: 280,
     background: 'var(--surface-card)', borderRadius: 14, padding: 16,
     boxShadow: '0 12px 32px rgba(0,0,0,0.18)', border: '1px solid var(--border)',
+    pointerEvents: 'none', // lets clicks pass through to the toolbox underneath
   },
   stepHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
   stepProgress: { fontSize: 12, fontWeight: 500, color: 'var(--violet)' },
-  stepClose: { border: 'none', background: 'transparent', fontSize: 16, color: 'var(--ink-muted)', lineHeight: 1 },
+  stepClose: {
+    border: 'none', background: 'transparent', fontSize: 16, color: 'var(--ink-muted)', lineHeight: 1,
+    pointerEvents: 'auto', // the close button itself still needs to be clickable
+  },
   stepPointerRow: { display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 },
   pointerArrow: { fontSize: 16, color: 'var(--violet)' },
   categorySwatch: { width: 10, height: 10, borderRadius: 3, flexShrink: 0 },
