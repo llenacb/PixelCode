@@ -31,6 +31,21 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
   const [currentCostumeIndex, setCurrentCostumeIndex] = useState(0);
   const [sounds, setSounds] = useState<SoundAsset[]>([]);
   const [showLessons, setShowLessons] = useState(false);
+
+  // Blockly caches element positions (toolbox, flyout, trash can) based on
+  // its container's size at the time they were last computed. Opening or
+  // closing the Lessons side panel changes that container's width via a
+  // pure CSS layout shift, which does NOT fire a browser resize event --
+  // so without this, Blockly's cached positions go stale and things like
+  // the trash can stop registering drops in the right spot even though
+  // they're drawn in the right spot. A short delay lets the DOM actually
+  // reflow before Blockly measures it.
+  useEffect(() => {
+    const workspace = workspaceRef.current;
+    if (!workspace) return;
+    const timer = setTimeout(() => Blockly.svgResize(workspace), 50);
+    return () => clearTimeout(timer);
+  }, [showLessons]);
   const [showTour, setShowTour] = useState(false);
 
   // Set up the Blockly workspace once.
@@ -262,7 +277,7 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
 };
 
 const styles: Record<string, React.CSSProperties> = {
-  page: { display: 'flex', flexDirection: 'column', height: '100vh' },
+  page: { display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' },
   header: {
     display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px',
     borderBottom: '1px solid var(--border)', background: 'var(--surface-card)',
@@ -287,7 +302,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '8px 20px', borderRadius: 8, border: 'none',
     background: '#E53935', color: '#fff', fontSize: 14, fontWeight: 500,
   },
-  workArea: { display: 'flex', flex: 1, minHeight: 0, position: 'relative' },
+  workArea: { display: 'flex', flex: 1, minHeight: 0, minWidth: 0, position: 'relative', overflow: 'hidden' },
   lessonsButton: {
     padding: '8px 14px', borderRadius: 8, border: '1px solid var(--border)',
     background: '#fff', fontSize: 14, fontWeight: 500, color: 'var(--ink)',

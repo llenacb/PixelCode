@@ -96,7 +96,7 @@ export const LessonPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 const styles: Record<string, React.CSSProperties> = {
   panel: {
-    width: 340, flexShrink: 0, background: 'var(--surface-card)',
+    width: 300, flexShrink: 0, background: 'var(--surface-card)',
     display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)',
   },
   header: {
