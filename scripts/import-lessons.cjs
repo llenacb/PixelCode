@@ -14,7 +14,7 @@
 //      already added to package.json's devDependencies)
 //
 // Run:
-//   node scripts/import-lessons.js
+//   node scripts/import-lessons.cjs
 
 const admin = require('firebase-admin');
 const path = require('path');
