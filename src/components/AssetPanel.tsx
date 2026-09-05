@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage, auth } from '@/lib/firebase';
+import { storage } from '@/lib/firebase';
 import type { Costume, SoundAsset } from '@/types';
 
 const BUILTIN_COSTUMES: { name: string; url: string }[] = [
@@ -39,14 +39,6 @@ export const AssetPanel: React.FC<AssetPanelProps> = ({
     // phase. kind/timestamp are folded into the filename itself (not an
     // extra path segment) so this still matches that 4-segment pattern.
     const path = `submissions/${schoolId}/${studentId}/default/${kind}-${Date.now()}-${file.name}`;
-    // TEMPORARY DEBUG: prints exactly what the upload is attempting and
-    // what the current token actually carries, so a permission-denied
-    // can be diagnosed precisely instead of guessed at. Remove once
-    // resolved.
-    const tokenResult = await auth.currentUser?.getIdTokenResult();
-    console.log('PixelCode debug \u2014 upload path:', path);
-    console.log('PixelCode debug \u2014 auth.currentUser.uid:', auth.currentUser?.uid);
-    console.log('PixelCode debug \u2014 token claims:', tokenResult?.claims);
     const fileRef = storageRef(storage, path);
     await uploadBytes(fileRef, file);
     return getDownloadURL(fileRef);
