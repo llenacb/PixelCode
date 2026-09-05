@@ -171,23 +171,24 @@ const styles: Record<string, React.CSSProperties> = {
     color: 'var(--ink-muted)', fontSize: 13,
   },
   stepCard: {
-    // Positioned past the fixed-width Stage panel (480px + 32px padding)
-    // so it sits right next to the toolbox categories it's pointing at,
-    // rather than floating over the stage area.
-    position: 'absolute', bottom: 16, left: 16, zIndex: 1000, width: 280,
-    background: 'var(--surface-card)', borderRadius: 14, padding: 16,
-    boxShadow: '0 12px 32px rgba(0,0,0,0.18)', border: '1px solid var(--border)',
-    pointerEvents: 'none', // lets clicks pass through to the toolbox underneath
+    // Sits below the Stage panel but well above the bottom of the
+    // viewport, and stays clear of the toolbox/flyout area (which starts
+    // well to the right of this column) so it never blocks drag
+    // interactions there.
+    position: 'absolute', top: 340, left: 16, zIndex: 1000, width: 280,
+    background: 'var(--violet)', borderRadius: 14, padding: 16,
+    boxShadow: '0 12px 32px rgba(109, 40, 217, 0.4)',
+    pointerEvents: 'none', // lets clicks pass through to whatever's underneath
   },
   stepHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
-  stepProgress: { fontSize: 12, fontWeight: 500, color: 'var(--violet)' },
+  stepProgress: { fontSize: 12, fontWeight: 600, color: '#E9D8FD' },
   stepClose: {
-    border: 'none', background: 'transparent', fontSize: 16, color: 'var(--ink-muted)', lineHeight: 1,
+    border: 'none', background: 'transparent', fontSize: 16, color: '#fff', lineHeight: 1,
     pointerEvents: 'auto', // the close button itself still needs to be clickable
   },
   stepPointerRow: { display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 },
-  categorySwatch: { width: 10, height: 10, borderRadius: 3, flexShrink: 0 },
-  categoryLabel: { fontSize: 12, fontWeight: 600, color: 'var(--ink)' },
-  stepInstruction: { fontSize: 14, lineHeight: 1.5, color: 'var(--ink)', margin: 0 },
-  stepDone: { fontSize: 13, color: '#16A34A', fontWeight: 500, marginTop: 8, marginBottom: 0 },
+  categorySwatch: { width: 10, height: 10, borderRadius: 3, flexShrink: 0, boxShadow: '0 0 0 2px rgba(255,255,255,0.6)' },
+  categoryLabel: { fontSize: 12, fontWeight: 700, color: '#fff' },
+  stepInstruction: { fontSize: 14, lineHeight: 1.5, color: '#fff', margin: 0 },
+  stepDone: { fontSize: 13, color: '#BBF7D0', fontWeight: 600, marginTop: 8, marginBottom: 0 },
 };
