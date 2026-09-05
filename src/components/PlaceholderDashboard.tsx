@@ -14,7 +14,7 @@ export const PlaceholderDashboard: React.FC<{ profile: UserProfile }> = ({ profi
     <img src="/mascot/robot_3.png" alt="" style={styles.mascot} />
     <h1 style={styles.h1}>Hi {profile.name.split(' ')[0]}!</h1>
     <p style={styles.p}>
-      {roleLabel[profile.role] ?? profile.role} tools are being built next \u2014 the
+      {roleLabel[profile.role] ?? profile.role} tools are being built next — the
       coding editor and lesson runner come in the following build phases.
     </p>
     <button style={styles.button} onClick={() => signOut(auth)}>Sign out</button>

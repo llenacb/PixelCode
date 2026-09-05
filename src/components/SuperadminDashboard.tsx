@@ -63,7 +63,7 @@ export const SuperadminDashboard: React.FC = () => {
     <div style={styles.page}>
       <header style={styles.header}>
         <img src="/mascot/robot_2.png" alt="" style={styles.headerMascot} />
-        <h1 style={styles.h1}>PixelCode \u2014 superadmin</h1>
+        <h1 style={styles.h1}>PixelCode — superadmin</h1>
       </header>
 
       {status && <p style={styles.status}>{status}</p>}
@@ -130,7 +130,7 @@ export const SuperadminDashboard: React.FC = () => {
                 onChange={(e) => setUserForm({ ...userForm, schoolId: e.target.value })}
                 style={styles.input}
               >
-                <option value="">Select a school\u2026</option>
+                <option value="">Select a school…</option>
                 {schools.map((s) => (
                   <option key={s.id} value={s.id}>{s.name}</option>
                 ))}
