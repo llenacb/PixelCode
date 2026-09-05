@@ -28,10 +28,11 @@ const App: React.FC = () => {
       if (loadedUidRef.current === u.uid) return;
       loadedUidRef.current = u.uid;
 
-      // Force-refresh so a just-provisioned account's custom claims
-      // (role/schoolId, set by the syncUserClaims trigger) are picked up
-      // immediately rather than waiting for the token's natural refresh.
-      await u.getIdToken(true);
+      // TEMPORARY DEBUG: prints the actual custom claims Firebase is
+      // sending back, so we can see directly whether role/schoolId ever
+      // made it onto this token. Remove once the claims issue is fixed.
+      const tokenResult = await u.getIdTokenResult(true);
+      console.log('PixelCode debug — ID token claims:', tokenResult.claims);
 
       const unsubscribeProfile = onSnapshot(doc(db, 'users', u.uid), (snap) => {
         setProfile(snap.exists() ? (snap.data() as UserProfile) : null);
