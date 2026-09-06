@@ -205,6 +205,35 @@ javascriptGenerator.forBlock['sound_play'] = (block) => {
   return `await api.playSound(${JSON.stringify(soundId)});\n`;
 };
 
+// ---------------------------------------------------------------------------
+// Override Blockly's BUILT-IN procedure generators (used by the Functions
+// toolbox category below). By default they emit plain synchronous
+// `function name() {...}` / `name();` -- but every custom block above
+// generates `await api.*(...)`, so a function containing one of them would
+// be a syntax error unless it's declared `async`. This override keeps
+// Blockly's own logic (nameDB_ lookups, argument handling) but changes
+// the two lines that matter: `async function` instead of `function`, and
+// `await name(...)` instead of a bare call.
+// ---------------------------------------------------------------------------
+javascriptGenerator.forBlock['procedures_defnoreturn'] = (block, gen) => {
+  const funcName = gen.nameDB_!.getName(block.getFieldValue('NAME'), Blockly.Names.NameType.PROCEDURE);
+  const branch = gen.statementToCode(block, 'STACK');
+  const args = ((block as any).arguments_ || []).map((argName: string) =>
+    gen.nameDB_!.getName(argName, Blockly.Names.NameType.VARIABLE),
+  );
+  const code = `async function ${funcName}(${args.join(', ')}) {\n${branch}}\n`;
+  (gen as any).definitions_[funcName] = code;
+  return null;
+};
+
+javascriptGenerator.forBlock['procedures_callnoreturn'] = (block, gen) => {
+  const funcName = gen.nameDB_!.getName(block.getFieldValue('NAME'), Blockly.Names.NameType.PROCEDURE);
+  const args = ((block as any).arguments_ || []).map((_: string, i: number) =>
+    gen.valueToCode(block, 'ARG' + i, Order.NONE) || 'null',
+  );
+  return `await ${funcName}(${args.join(', ')});\n`;
+};
+
 export const TOOLBOX_XML = `
 <xml>
   <category name="Events" colour="${HAT_COLOUR}">
@@ -236,12 +265,34 @@ export const TOOLBOX_XML = `
   <category name="Sound" colour="${SOUND_COLOUR}">
     <block type="sound_play"></block>
   </category>
+  <category name="Variables" custom="VARIABLE" colour="#FF8C1A"></category>
+  <category name="Lists" colour="#FF661A">
+    <block type="lists_create_with"></block>
+    <block type="lists_length"></block>
+    <block type="lists_isEmpty"></block>
+    <block type="lists_indexOf"></block>
+    <block type="lists_getIndex"></block>
+    <block type="lists_setIndex"></block>
+    <block type="lists_repeat"><value name="NUM"><shadow type="math_number"><field name="NUM">5</field></shadow></value></block>
+  </category>
+  <category name="Functions" custom="PROCEDURE" colour="#FF6680"></category>
   <category name="Math" colour="#59C059">
     <block type="math_number"></block>
     <block type="math_arithmetic"></block>
+    <block type="math_round"></block>
+    <block type="math_modulo"><value name="DIVIDEND"><shadow type="math_number"><field name="NUM">10</field></shadow></value><value name="DIVISOR"><shadow type="math_number"><field name="NUM">3</field></shadow></value></block>
+    <block type="math_random_int"><value name="FROM"><shadow type="math_number"><field name="NUM">1</field></shadow></value><value name="TO"><shadow type="math_number"><field name="NUM">10</field></shadow></value></block>
+  </category>
+  <category name="Logic" colour="#59C059">
+    <block type="logic_compare"></block>
+    <block type="logic_operation"></block>
+    <block type="logic_negate"></block>
+    <block type="logic_boolean"></block>
   </category>
   <category name="Text" colour="#59C059">
     <block type="text"></block>
+    <block type="text_join"></block>
+    <block type="text_length"></block>
   </category>
 </xml>
 `;
