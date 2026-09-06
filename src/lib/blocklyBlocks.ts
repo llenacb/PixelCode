@@ -1,4 +1,5 @@
 import * as Blockly from 'blockly/core';
+import 'blockly/msg/en';
 import { javascriptGenerator, Order } from 'blockly/javascript';
 
 // ---------------------------------------------------------------------------
