@@ -50,11 +50,52 @@ Done:
   any lesson is good follow-up work. Replayable anytime via the "🎯
   Tutorial" header button.
 
-Not yet built (upcoming phase): lesson-completion tracking (a student's
-project isn't currently linked to which lesson they were working on --
-the teacher dashboard shows their latest saved project, not per-lesson
-progress, since that mapping doesn't exist in the data model yet), and
-wiring a lesson's challenge directly into starter code in the editor.
+## Block library expansion (post-Week 9)
+
+Beyond the original 12-week plan, the block set has grown significantly
+past the Week 3-5 starter set, benchmarked against a competing platform's
+full documented block library (not copied -- see commit history for the
+IP boundary this was built against):
+
+- **Data/Functions (mostly free via Blockly's built-ins):** Variables,
+  Lists, Functions (with a custom async-aware code generator override --
+  see the comment above `procedures_defnoreturn` in `blocklyBlocks.ts`,
+  since every PixelCode block uses `await` and Blockly's default
+  procedure codegen is synchronous), Logic (compare/and/or/not),
+  extended Math (round/modulo/random), extended Text
+  (join/length/substring/indexOf/charAt), and `controls_if`.
+- **Event-driven runtime (`src/lib/interpreter.ts`):** this was a real
+  architecture change, not just new blocks. Previously Run flattened
+  every script into one linear sequence that ran once. Now each
+  top-level hat block (`when \u25b6 clicked` or the new `when [key] pressed`)
+  is compiled and run as an INDEPENDENT script; key-press scripts
+  register a real `keydown` listener and can re-trigger repeatedly for as
+  long as the program is running, with per-script overlap protection
+  (won't stack up a new run if the previous press's script is still
+  mid-execution). A program with only flag scripts still auto-finishes
+  when they're done (like before); a program with any key scripts stays
+  "running" until Stop is clicked, matching how an interactive/game
+  project needs to keep listening.
+- **Sensing category:** key-pressed (state check, distinct from the
+  event-triggering version), mouse down/x/y, touching-edge -- all
+  synchronous getters on `Stage.tsx`'s new `getMouseState()` /
+  `isTouchingEdge()`, since sensing values are read inside conditions,
+  not awaited like action blocks.
+- **Branded naming dialog** (`src/lib/blocklyDialogs.tsx`): overrides
+  Blockly's default `window.prompt()` for naming variables/lists/
+  functions with a styled modal matching the rest of the app.
+- **Fixed a real locale bug:** Blockly's English message strings weren't
+  being loaded at all, which silently broke the Variables/Lists/
+  Functions flyouts (buttons rendered literal placeholder text like
+  `%{BKY_NEW_VARIABLE}` instead of "Make a Variable"). Fixed in
+  `blocklyBlocks.ts` -- worth knowing if a similar-looking "flyout shows
+  broken text" bug ever reappears.
+
+**Not yet built from the wiki comparison:** a proper "Make a List" UX
+(currently lists are just regular variables holding a `lists_create_with`
+result -- workable but not as clean as Scratch/Kitten's dedicated list
+creation flow), Pen (needs a real drawing layer on the PixiJS stage), and
+multi-sprite/cloning (the Stage currently supports exactly one sprite).
 
 ## Weeks 1-9 status
 

@@ -132,10 +132,32 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
     const stage = stageRef.current;
     if (!workspace || !stage || isRunning) return;
     setStatus(null);
-    const code = javascriptGenerator.workspaceToCode(workspace);
+
+    // Each top-level hat block becomes its OWN independent script rather
+    // than one big flattened one (workspaceToCode would merge every
+    // top-level stack together) -- that's what lets a "when key pressed"
+    // script run independently, possibly repeatedly, while a "when
+    // clicked" script is also running.
+    javascriptGenerator.init(workspace);
+    const flagScripts: string[] = [];
+    const keyScripts: Record<string, string[]> = {};
+    for (const block of workspace.getTopBlocks(true)) {
+      if (block.type === 'event_whenflagclicked') {
+        flagScripts.push(javascriptGenerator.blockToCode(block) as string);
+      } else if (block.type === 'event_whenkeypressed') {
+        const key = block.getFieldValue('KEY');
+        const code = javascriptGenerator.blockToCode(block) as string;
+        (keyScripts[key] ||= []).push(code);
+      }
+      // Other stray top-level blocks (not under a hat) intentionally
+      // don't run -- matches the expectation that scripts start from an
+      // event block, not from anywhere on the canvas.
+    }
+    const definitions = javascriptGenerator.finish('');
+
     setIsRunning(true);
     runHandleRef.current = runProgram(
-      code,
+      { definitions, flagScripts, keyScripts },
       stage,
       {
         nextCostume: async () => {

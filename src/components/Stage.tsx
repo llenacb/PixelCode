@@ -16,6 +16,12 @@ export interface SpriteState {
   visible: boolean;
 }
 
+export interface MouseState {
+  x: number;
+  y: number;
+  down: boolean;
+}
+
 export interface StageHandle {
   getState(): SpriteState;
   setPosition(x: number, y: number): void;
@@ -24,11 +30,18 @@ export interface StageHandle {
   setSpeech(text: string | null): void;
   setCostume(url: string): Promise<void>;
   reset(): void;
+  getMouseState(): MouseState;
+  isTouchingEdge(): boolean;
 }
 
 const toPixiCoords = (x: number, y: number) => ({
   px: STAGE_WIDTH / 2 + x,
   py: STAGE_HEIGHT / 2 - y,
+});
+
+const toStageCoords = (px: number, py: number) => ({
+  x: px - STAGE_WIDTH / 2,
+  y: STAGE_HEIGHT / 2 - py,
 });
 
 export const Stage = forwardRef<StageHandle>((_, ref) => {
@@ -37,6 +50,8 @@ export const Stage = forwardRef<StageHandle>((_, ref) => {
   const spriteRef = useRef<Sprite | null>(null);
   const speechRef = useRef<Text | null>(null);
   const stateRef = useRef<SpriteState>({ x: 0, y: 0, rotationDeg: 0, visible: true });
+  const mouseStateRef = useRef<MouseState>({ x: 0, y: 0, down: false });
+  const cleanupMouseListenersRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     let destroyed = false;
@@ -55,6 +70,30 @@ export const Stage = forwardRef<StageHandle>((_, ref) => {
       }
       appRef.current = app;
       canvasHostRef.current?.appendChild(app.canvas);
+
+      // Mouse tracking for Sensing blocks -- converted into the same
+      // Scratch-style stage coordinates everything else uses, so "mouse x"
+      // means the same thing to a student as "go to x: ...".
+      const canvas = app.canvas;
+      const handlePointerMove = (e: PointerEvent) => {
+        const rect = canvas.getBoundingClientRect();
+        const px = ((e.clientX - rect.left) / rect.width) * STAGE_WIDTH;
+        const py = ((e.clientY - rect.top) / rect.height) * STAGE_HEIGHT;
+        const { x, y } = toStageCoords(px, py);
+        mouseStateRef.current.x = x;
+        mouseStateRef.current.y = y;
+      };
+      const handlePointerDown = () => { mouseStateRef.current.down = true; };
+      const handlePointerUp = () => { mouseStateRef.current.down = false; };
+      canvas.addEventListener('pointermove', handlePointerMove);
+      canvas.addEventListener('pointerdown', handlePointerDown);
+      window.addEventListener('pointerup', handlePointerUp); // release can happen outside the canvas
+
+      cleanupMouseListenersRef.current = () => {
+        canvas.removeEventListener('pointermove', handlePointerMove);
+        canvas.removeEventListener('pointerdown', handlePointerDown);
+        window.removeEventListener('pointerup', handlePointerUp);
+      };
 
       const texture: Texture = await Assets.load('/mascot/robot_3.png');
       const sprite = new Sprite(texture);
@@ -78,6 +117,7 @@ export const Stage = forwardRef<StageHandle>((_, ref) => {
 
     return () => {
       destroyed = true;
+      cleanupMouseListenersRef.current?.();
       appRef.current?.destroy(true, { children: true });
       appRef.current = null;
     };
@@ -151,6 +191,27 @@ export const Stage = forwardRef<StageHandle>((_, ref) => {
         sprite.visible = true;
       }
       if (speechRef.current) speechRef.current.visible = false;
+    },
+
+    getMouseState: () => ({ ...mouseStateRef.current }),
+
+    isTouchingEdge() {
+      const sprite = spriteRef.current;
+      if (!sprite) return false;
+      // Half-extents in stage coordinates -- sprite center must be within
+      // (stage half-size - sprite half-size) of the origin to be fully
+      // inside; anything past that counts as touching the edge, matching
+      // the intuitive "has it reached the wall" behavior a bounce-off-edge
+      // script needs.
+      const halfW = sprite.width / 2;
+      const halfH = sprite.height / 2;
+      const { x, y } = stateRef.current;
+      return (
+        x <= -STAGE_WIDTH / 2 + halfW ||
+        x >= STAGE_WIDTH / 2 - halfW ||
+        y <= -STAGE_HEIGHT / 2 + halfH ||
+        y >= STAGE_HEIGHT / 2 - halfH
+      );
     },
   }));
 

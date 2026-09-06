@@ -43,6 +43,30 @@ javascriptGenerator.forBlock['event_whenflagclicked'] = () => '';
 // type and generates/runs the statements stacked beneath each one; the hat
 // itself emits no code.
 
+const KEY_OPTIONS: [string, string][] = [
+  ['space', 'space'], ['up arrow', 'up'], ['down arrow', 'down'],
+  ['left arrow', 'left'], ['right arrow', 'right'], ['enter', 'enter'],
+  ...'abcdefghijklmnopqrstuvwxyz'.split('').map((c): [string, string] => [c, c]),
+  ...'0123456789'.split('').map((c): [string, string] => [c, c]),
+  ['any key', 'any'],
+];
+
+Blockly.Blocks['event_whenkeypressed'] = {
+  init() {
+    this.appendDummyInput()
+      .appendField('when')
+      .appendField(new Blockly.FieldDropdown(KEY_OPTIONS), 'KEY')
+      .appendField('key pressed');
+    this.setNextStatement(true);
+    this.setColour(HAT_COLOUR);
+    this.setTooltip('Runs the scripts below every time this key is pressed, for as long as the program is running.');
+  },
+};
+javascriptGenerator.forBlock['event_whenkeypressed'] = () => '';
+// Also a hat block -- same "emits nothing itself" pattern as above.
+// CodingEditor.tsx reads the KEY field directly off this block (not
+// through codegen) to know which key each script beneath it belongs to.
+
 Blockly.Blocks['motion_movesteps'] = {
   init() {
     this.appendValueInput('STEPS').setCheck('Number').appendField('move');
@@ -218,6 +242,68 @@ javascriptGenerator.forBlock['sound_play'] = (block) => {
 };
 
 // ---------------------------------------------------------------------------
+// Sensing blocks. Unlike the event hats above, these are VALUE blocks
+// (booleans/numbers) used inside conditions -- e.g. plugged into an `if`.
+// They read LIVE state (current key/mouse state) synchronously, so unlike
+// almost everything else in this file they do NOT need `await` -- the
+// interpreter exposes them as plain synchronous getter functions on `api`.
+// ---------------------------------------------------------------------------
+const SENSING_COLOUR = '#5CB1D6';
+
+Blockly.Blocks['sensing_keypressed'] = {
+  init() {
+    this.appendDummyInput()
+      .appendField('key')
+      .appendField(new Blockly.FieldDropdown(KEY_OPTIONS.filter(([, v]) => v !== 'any')), 'KEY')
+      .appendField('pressed?');
+    this.setOutput(true, 'Boolean');
+    this.setColour(SENSING_COLOUR);
+    this.setTooltip('True while this key is currently held down (checked at the moment this block runs, not an event).');
+  },
+};
+javascriptGenerator.forBlock['sensing_keypressed'] = (block) => {
+  const key = block.getFieldValue('KEY');
+  return [`api.isKeyPressed(${JSON.stringify(key)})`, Order.FUNCTION_CALL];
+};
+
+Blockly.Blocks['sensing_mousedown'] = {
+  init() {
+    this.appendDummyInput().appendField('mouse down?');
+    this.setOutput(true, 'Boolean');
+    this.setColour(SENSING_COLOUR);
+  },
+};
+javascriptGenerator.forBlock['sensing_mousedown'] = () => ['api.isMouseDown()', Order.FUNCTION_CALL];
+
+Blockly.Blocks['sensing_mousex'] = {
+  init() {
+    this.appendDummyInput().appendField('mouse x');
+    this.setOutput(true, 'Number');
+    this.setColour(SENSING_COLOUR);
+  },
+};
+javascriptGenerator.forBlock['sensing_mousex'] = () => ['api.getMouseX()', Order.FUNCTION_CALL];
+
+Blockly.Blocks['sensing_mousey'] = {
+  init() {
+    this.appendDummyInput().appendField('mouse y');
+    this.setOutput(true, 'Number');
+    this.setColour(SENSING_COLOUR);
+  },
+};
+javascriptGenerator.forBlock['sensing_mousey'] = () => ['api.getMouseY()', Order.FUNCTION_CALL];
+
+Blockly.Blocks['sensing_touchingedge'] = {
+  init() {
+    this.appendDummyInput().appendField('touching edge?');
+    this.setOutput(true, 'Boolean');
+    this.setColour(SENSING_COLOUR);
+    this.setTooltip('True when the sprite has reached the edge of the stage.');
+  },
+};
+javascriptGenerator.forBlock['sensing_touchingedge'] = () => ['api.isTouchingEdge()', Order.FUNCTION_CALL];
+
+// ---------------------------------------------------------------------------
 // Override Blockly's BUILT-IN procedure generators (used by the Functions
 // toolbox category below). By default they emit plain synchronous
 // `function name() {...}` / `name();` -- but every custom block above
@@ -250,6 +336,7 @@ export const TOOLBOX_XML = `
 <xml>
   <category name="Events" colour="${HAT_COLOUR}">
     <block type="event_whenflagclicked"></block>
+    <block type="event_whenkeypressed"></block>
   </category>
   <category name="Motion" colour="${MOTION_COLOUR}">
     <block type="motion_movesteps"><value name="STEPS"><shadow type="math_number"><field name="NUM">10</field></shadow></value></block>
@@ -274,6 +361,13 @@ export const TOOLBOX_XML = `
     <block type="control_repeat"><value name="TIMES"><shadow type="math_number"><field name="NUM">10</field></shadow></value></block>
     <block type="control_forever"></block>
     <block type="controls_if"></block>
+  </category>
+  <category name="Sensing" colour="${SENSING_COLOUR}">
+    <block type="sensing_keypressed"></block>
+    <block type="sensing_mousedown"></block>
+    <block type="sensing_mousex"></block>
+    <block type="sensing_mousey"></block>
+    <block type="sensing_touchingedge"></block>
   </category>
   <category name="Sound" colour="${SOUND_COLOUR}">
     <block type="sound_play"></block>
