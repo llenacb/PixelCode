@@ -6,6 +6,7 @@ import { collection, addDoc, updateDoc, doc, query, where, limit, getDocs } from
 import { signOut } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
 import { TOOLBOX_XML, setAvailableSounds } from '@/lib/blocklyBlocks';
+import { installBlockyPixelCodePrompt } from '@/lib/blocklyDialogs';
 import { runProgram, playBeep, type RunHandle } from '@/lib/interpreter';
 import { Stage, type StageHandle } from '@/components/Stage';
 import { AssetPanel } from '@/components/AssetPanel';
@@ -51,6 +52,7 @@ export const CodingEditor: React.FC<{ profile: UserProfile }> = ({ profile }) =>
   // Set up the Blockly workspace once.
   useEffect(() => {
     if (!blocklyHostRef.current) return;
+    installBlockyPixelCodePrompt(); // replaces the plain browser prompt() with a branded modal
     const workspace = Blockly.inject(blocklyHostRef.current, {
       toolbox: TOOLBOX_XML,
       grid: { spacing: 20, length: 3, colour: '#E5DEEE', snap: true },
