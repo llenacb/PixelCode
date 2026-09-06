@@ -1,6 +1,17 @@
 import * as Blockly from 'blockly/core';
-import 'blockly/msg/en';
+import * as En from 'blockly/msg/en';
 import { javascriptGenerator, Order } from 'blockly/javascript';
+
+// blockly/msg/en exports message strings as a plain object -- it doesn't
+// populate Blockly.Msg on its own (confirmed the hard way: without this,
+// things like the "Make a Variable" button literally render the text
+// "%{BKY_NEW_VARIABLE}" instead of substituting it). Merging directly
+// into Msg's existing object (not reassigning the reference, which
+// TypeScript's own types confirm is always a real object) plus calling
+// the official setLocale if present covers this regardless of exactly
+// which module-resolution path is in play.
+Object.assign(Blockly.Msg, En);
+(Blockly as unknown as { setLocale?: (msgs: object) => void }).setLocale?.(En);
 
 // ---------------------------------------------------------------------------
 // Starter block set for PixelCode v1: Events, Motion, Looks, Control, Sound.
