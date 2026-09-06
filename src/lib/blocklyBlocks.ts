@@ -24,11 +24,11 @@ Object.assign(Blockly.Msg, En);
 // that file for what api.* methods exist and how Stop is implemented.
 // ---------------------------------------------------------------------------
 
-const HAT_COLOUR = '#FFAB19'; // events
-const MOTION_COLOUR = '#4C97FF';
-const LOOKS_COLOUR = '#9966FF';
-const CONTROL_COLOUR = '#FFAB19';
-const SOUND_COLOUR = '#CF63CF';
+export const HAT_COLOUR = '#FFAB19'; // events
+export const MOTION_COLOUR = '#4C97FF';
+export const LOOKS_COLOUR = '#9966FF';
+export const CONTROL_COLOUR = '#FFAB19';
+export const SOUND_COLOUR = '#CF63CF';
 
 Blockly.Blocks['event_whenflagclicked'] = {
   init() {
@@ -248,7 +248,11 @@ javascriptGenerator.forBlock['sound_play'] = (block) => {
 // almost everything else in this file they do NOT need `await` -- the
 // interpreter exposes them as plain synchronous getter functions on `api`.
 // ---------------------------------------------------------------------------
-const SENSING_COLOUR = '#5CB1D6';
+export const SENSING_COLOUR = '#5CB1D6';
+export const VARIABLE_COLOUR = '#FF8C1A';
+export const LIST_COLOUR = '#FF661A';
+export const FUNCTION_COLOUR = '#FF6680';
+export const MATH_COLOUR = '#59C059';
 
 Blockly.Blocks['sensing_keypressed'] = {
   init() {

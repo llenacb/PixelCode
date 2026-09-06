@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import type { Lesson } from '@/types';
+import { BlockStackPreview } from '@/components/BlockStackPreview';
 
 const TIER_LABELS: Record<Lesson['tier'], string> = {
   beginner: 'Beginner',
@@ -84,6 +85,7 @@ export const LessonPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 <div key={i} style={styles.challenge}>
                   <div style={styles.challengeTitle}>Challenge {i + 1}: {c.title}</div>
                   <p style={styles.sectionText}>{c.instructions}</p>
+                  {c.blocks && <BlockStackPreview blocks={c.blocks} />}
                 </div>
               ))}
             </section>

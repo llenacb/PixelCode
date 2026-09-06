@@ -86,6 +86,11 @@ export interface CodingProject {
 export interface LessonChallenge {
   title: string;
   instructions: string;
+  /** Optional small visual preview of the block stack this challenge is
+   *  asking for -- shown as a stylized diagram (not a live Blockly
+   *  instance) so a beginner has something to visually match against,
+   *  not just prose to translate into blocks themselves. */
+  blocks?: { label: string; color: string; nested?: boolean }[];
 }
 
 export interface LessonContent {

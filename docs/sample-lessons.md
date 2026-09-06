@@ -21,8 +21,24 @@ explanation, then a hands-on challenge or two.
     "conceptTitle": "The when-clicked block",
     "conceptText": "Every script starts with a hat block. The 'when \u25b6 clicked' block runs everything snapped underneath it the moment you press Run.",
     "challenges": [
-      { "title": "Say hello", "instructions": "Snap a 'say' block under 'when \u25b6 clicked' and make Pixel say hi." },
-      { "title": "Take a step", "instructions": "Add a 'move 10 steps' block before the say block, so Pixel walks forward first." }
+      {
+        "title": "Say hello",
+        "instructions": "Snap a 'say' block under 'when \u25b6 clicked' and make Pixel say hi.",
+        "blocks": [
+          {
+            "label": "when \u25b6 clicked",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "say \"Hi!\"",
+            "color": "#9966FF"
+          }
+        ]
+      },
+      {
+        "title": "Take a step",
+        "instructions": "Add a 'move 10 steps' block before the say block, so Pixel walks forward first."
+      }
     ]
   }
 }
@@ -43,8 +59,29 @@ explanation, then a hands-on challenge or two.
     "conceptTitle": "The repeat block",
     "conceptText": "Instead of stacking ten 'move' blocks, a 'repeat' block runs whatever is inside it a set number of times. Drag 'move 10 steps' inside a 'repeat 10' block.",
     "challenges": [
-      { "title": "Walk across", "instructions": "Use 'repeat' with a 'move' block inside so Pixel walks all the way across the stage." },
-      { "title": "Turn around", "instructions": "Add a 'turn 180 degrees' block after the repeat loop, so Pixel turns to face back the way it came." }
+      {
+        "title": "Walk across",
+        "instructions": "Use 'repeat' with a 'move' block inside so Pixel walks all the way across the stage.",
+        "blocks": [
+          {
+            "label": "when \u25b6 clicked",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "repeat 10",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "move 10 steps",
+            "color": "#4C97FF",
+            "nested": true
+          }
+        ]
+      },
+      {
+        "title": "Turn around",
+        "instructions": "Add a 'turn 180 degrees' block after the repeat loop, so Pixel turns to face back the way it came."
+      }
     ]
   }
 }
@@ -65,8 +102,34 @@ explanation, then a hands-on challenge or two.
     "conceptTitle": "The next costume block",
     "conceptText": "Add a costume in the Costumes panel on the right, then use the 'next costume' block to switch to it. Doing this inside a 'forever' loop with a short 'wait' between each switch makes Pixel look like it's animating.",
     "challenges": [
-      { "title": "Add a second look", "instructions": "In the Costumes panel, add one of the built-in robot costumes so Pixel has two to switch between." },
-      { "title": "Animate it", "instructions": "Build: when \u25b6 clicked \u2192 forever \u2192 next costume \u2192 wait 0.5 seconds. Run it and watch Pixel switch looks continuously. Click Stop when you're done." }
+      {
+        "title": "Add a second look",
+        "instructions": "In the Costumes panel, add one of the built-in robot costumes so Pixel has two to switch between.",
+        "blocks": [
+          {
+            "label": "when \u25b6 clicked",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "forever",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "next costume",
+            "color": "#9966FF",
+            "nested": true
+          },
+          {
+            "label": "wait 0.5 seconds",
+            "color": "#FFAB19",
+            "nested": true
+          }
+        ]
+      },
+      {
+        "title": "Animate it",
+        "instructions": "Build: when \u25b6 clicked \u2192 forever \u2192 next costume \u2192 wait 0.5 seconds. Run it and watch Pixel switch looks continuously. Click Stop when you're done."
+      }
     ]
   }
 }
@@ -87,8 +150,24 @@ explanation, then a hands-on challenge or two.
     "conceptTitle": "The say-for-seconds block",
     "conceptText": "The plain 'say' block shows text forever (until something else changes it). 'Say ... for ... seconds' shows it, waits on its own, then clears it automatically -- no separate wait block needed.",
     "challenges": [
-      { "title": "Say it for two seconds", "instructions": "Use 'say Hello! for 2 seconds' instead of the plain say block." },
-      { "title": "Say two things in a row", "instructions": "Add a second 'say ... for ... seconds' block after the first, with a different message." }
+      {
+        "title": "Say it for two seconds",
+        "instructions": "Use 'say Hello! for 2 seconds' instead of the plain say block.",
+        "blocks": [
+          {
+            "label": "when \u25b6 clicked",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "say \"Hello!\" for 2 seconds",
+            "color": "#9966FF"
+          }
+        ]
+      },
+      {
+        "title": "Say two things in a row",
+        "instructions": "Add a second 'say ... for ... seconds' block after the first, with a different message."
+      }
     ]
   }
 }
@@ -109,8 +188,24 @@ explanation, then a hands-on challenge or two.
     "conceptTitle": "The go-to x/y block",
     "conceptText": "The stage has a coordinate grid: x=0, y=0 is the very center. Positive x moves right, positive y moves up. 'Go to x: ... y: ...' places Pixel at that exact spot instantly.",
     "challenges": [
-      { "title": "Go to a corner", "instructions": "Use 'go to x: 150 y: 100' to send Pixel to the upper-right area of the stage." },
-      { "title": "Bounce between two spots", "instructions": "Add a 'wait 1 second' then a second 'go to x/y' block sending Pixel somewhere else, so it hops between two positions." }
+      {
+        "title": "Go to a corner",
+        "instructions": "Use 'go to x: 150 y: 100' to send Pixel to the upper-right area of the stage.",
+        "blocks": [
+          {
+            "label": "when \u25b6 clicked",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "go to x: 150 y: 100",
+            "color": "#4C97FF"
+          }
+        ]
+      },
+      {
+        "title": "Bounce between two spots",
+        "instructions": "Add a 'wait 1 second' then a second 'go to x/y' block sending Pixel somewhere else, so it hops between two positions."
+      }
     ]
   }
 }
@@ -131,8 +226,24 @@ explanation, then a hands-on challenge or two.
     "conceptTitle": "The play-sound block",
     "conceptText": "Upload a sound file in the Sounds panel on the right first -- it'll show up as a new choice in the 'play sound' block's dropdown. Pick '(beep)' if you don't want to upload your own yet.",
     "challenges": [
-      { "title": "Play a sound on click", "instructions": "Add a 'play sound' block right after 'when \u25b6 clicked'." },
-      { "title": "Upload your own", "instructions": "Upload a short sound file in the Sounds panel, then pick it from the play-sound block's dropdown instead of the beep." }
+      {
+        "title": "Play a sound on click",
+        "instructions": "Add a 'play sound' block right after 'when \u25b6 clicked'.",
+        "blocks": [
+          {
+            "label": "when \u25b6 clicked",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "play sound (beep)",
+            "color": "#CF63CF"
+          }
+        ]
+      },
+      {
+        "title": "Upload your own",
+        "instructions": "Upload a short sound file in the Sounds panel, then pick it from the play-sound block's dropdown instead of the beep."
+      }
     ]
   }
 }
@@ -153,8 +264,32 @@ explanation, then a hands-on challenge or two.
     "conceptTitle": "The show and hide blocks",
     "conceptText": "'Hide' makes the sprite invisible; 'show' brings it back. Combine them with 'wait' blocks to control the timing of the disappearing act.",
     "challenges": [
-      { "title": "Disappear and return", "instructions": "Build: when \u25b6 clicked \u2192 hide \u2192 wait 1 second \u2192 show." },
-      { "title": "Blink three times", "instructions": "Put a hide/wait/show/wait sequence inside a 'repeat 3' block so Pixel blinks three times in a row." }
+      {
+        "title": "Disappear and return",
+        "instructions": "Build: when \u25b6 clicked \u2192 hide \u2192 wait 1 second \u2192 show.",
+        "blocks": [
+          {
+            "label": "when \u25b6 clicked",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "hide",
+            "color": "#9966FF"
+          },
+          {
+            "label": "wait 1 seconds",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "show",
+            "color": "#9966FF"
+          }
+        ]
+      },
+      {
+        "title": "Blink three times",
+        "instructions": "Put a hide/wait/show/wait sequence inside a 'repeat 3' block so Pixel blinks three times in a row."
+      }
     ]
   }
 }
@@ -175,8 +310,34 @@ explanation, then a hands-on challenge or two.
     "conceptTitle": "Combining forever with motion",
     "conceptText": "A 'forever' block with 'move' and 'turn' blocks inside makes Pixel travel in a continuous pattern. Remember: click Stop to end it whenever you like -- forever loops don't stop on their own.",
     "challenges": [
-      { "title": "Walk in a square-ish loop", "instructions": "Inside a forever block: move 50 steps, then turn 90 degrees. Run it and watch Pixel trace a loop around the stage." },
-      { "title": "Slow it down", "instructions": "Add a 'wait 0.3 seconds' inside the loop so it's easier to watch Pixel move." }
+      {
+        "title": "Walk in a square-ish loop",
+        "instructions": "Inside a forever block: move 50 steps, then turn 90 degrees. Run it and watch Pixel trace a loop around the stage.",
+        "blocks": [
+          {
+            "label": "when \u25b6 clicked",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "forever",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "move 50 steps",
+            "color": "#4C97FF",
+            "nested": true
+          },
+          {
+            "label": "turn 90 degrees",
+            "color": "#4C97FF",
+            "nested": true
+          }
+        ]
+      },
+      {
+        "title": "Slow it down",
+        "instructions": "Add a 'wait 0.3 seconds' inside the loop so it's easier to watch Pixel move."
+      }
     ]
   }
 }
@@ -197,8 +358,24 @@ explanation, then a hands-on challenge or two.
     "conceptTitle": "Combining math with say",
     "conceptText": "The Math category has a block for addition, subtraction, and more. Drop one of those blocks into the 'say' block's text slot instead of typing plain words, and Pixel will say the calculated result.",
     "challenges": [
-      { "title": "Say a sum", "instructions": "Drag a '+' math block into a 'say' block, set it to 2 + 3, and run it -- Pixel should say '5'." },
-      { "title": "Try a bigger calculation", "instructions": "Change the numbers, or nest a second math block inside the first, to calculate something more complex." }
+      {
+        "title": "Say a sum",
+        "instructions": "Drag a '+' math block into a 'say' block, set it to 2 + 3, and run it -- Pixel should say '5'.",
+        "blocks": [
+          {
+            "label": "when \u25b6 clicked",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "say (2 + 3)",
+            "color": "#9966FF"
+          }
+        ]
+      },
+      {
+        "title": "Try a bigger calculation",
+        "instructions": "Change the numbers, or nest a second math block inside the first, to calculate something more complex."
+      }
     ]
   }
 }
@@ -219,8 +396,14 @@ explanation, then a hands-on challenge or two.
     "conceptTitle": "No new blocks -- just putting it all together",
     "conceptText": "There's nothing new to learn here. The skill this lesson teaches is planning: deciding what order to snap blocks in so the whole script tells a little story from start to finish.",
     "challenges": [
-      { "title": "Build a mini story", "instructions": "Using only blocks you already know, make Pixel: say something, walk forward, change costume, play a sound, and say something else. Any order you like." },
-      { "title": "Make it loop", "instructions": "Wrap part of your story in a 'repeat' block so some part of it happens more than once." }
+      {
+        "title": "Build a mini story",
+        "instructions": "Using only blocks you already know, make Pixel: say something, walk forward, change costume, play a sound, and say something else. Any order you like."
+      },
+      {
+        "title": "Make it loop",
+        "instructions": "Wrap part of your story in a 'repeat' block so some part of it happens more than once."
+      }
     ]
   }
 }
@@ -241,8 +424,28 @@ explanation, then a hands-on challenge or two.
     "conceptTitle": "Creating and setting a variable",
     "conceptText": "Click Variables \u2192 Make a Variable, name it 'score'. Use 'set score to 0' to give it a starting value, and drag the 'score' block itself into a 'say' block to show what it's holding.",
     "challenges": [
-      { "title": "Make a score variable", "instructions": "Create a variable called 'score', set it to 0 when \u25b6 clicked, then say the score." },
-      { "title": "Start somewhere else", "instructions": "Change the starting value to something other than 0 and run it again -- notice the say block shows the new number automatically." }
+      {
+        "title": "Make a score variable",
+        "instructions": "Create a variable called 'score', set it to 0 when \u25b6 clicked, then say the score.",
+        "blocks": [
+          {
+            "label": "when \u25b6 clicked",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "set score to 0",
+            "color": "#FF8C1A"
+          },
+          {
+            "label": "say score",
+            "color": "#9966FF"
+          }
+        ]
+      },
+      {
+        "title": "Start somewhere else",
+        "instructions": "Change the starting value to something other than 0 and run it again -- notice the say block shows the new number automatically."
+      }
     ]
   }
 }
@@ -263,8 +466,43 @@ explanation, then a hands-on challenge or two.
     "conceptTitle": "The change-variable-by block",
     "conceptText": "'Change score by 1' adds 1 to whatever score currently is, instead of overwriting it like 'set' does. Put it inside a loop to watch a number climb.",
     "challenges": [
-      { "title": "Count to ten", "instructions": "Set score to 0, then inside a 'repeat 10' block: change score by 1, then say score, then wait 0.3 seconds." },
-      { "title": "Count by twos", "instructions": "Change the 'change score by' amount to 2 instead of 1, and see how the counting changes." }
+      {
+        "title": "Count to ten",
+        "instructions": "Set score to 0, then inside a 'repeat 10' block: change score by 1, then say score, then wait 0.3 seconds.",
+        "blocks": [
+          {
+            "label": "when \u25b6 clicked",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "set score to 0",
+            "color": "#FF8C1A"
+          },
+          {
+            "label": "repeat 10",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "change score by 1",
+            "color": "#FF8C1A",
+            "nested": true
+          },
+          {
+            "label": "say score",
+            "color": "#9966FF",
+            "nested": true
+          },
+          {
+            "label": "wait 0.3 seconds",
+            "color": "#FFAB19",
+            "nested": true
+          }
+        ]
+      },
+      {
+        "title": "Count by twos",
+        "instructions": "Change the 'change score by' amount to 2 instead of 1, and see how the counting changes."
+      }
     ]
   }
 }
@@ -285,8 +523,38 @@ explanation, then a hands-on challenge or two.
     "conceptTitle": "The if block and comparisons",
     "conceptText": "The Logic category has a '>' (greater than) block, and Control has an 'if' block with a spot for that comparison. Click the gear/blue icon on the if block to add an 'else' part, so Pixel can do one thing OR another.",
     "challenges": [
-      { "title": "Check a score", "instructions": "Set score to 7. Use 'if score > 5' with an else: say 'High score!' in the if part, say 'Keep trying' in the else part." },
-      { "title": "Try both paths", "instructions": "Change the starting score to something below 5, run it again, and confirm the other message shows instead." }
+      {
+        "title": "Check a score",
+        "instructions": "Set score to 7. Use 'if score > 5' with an else: say 'High score!' in the if part, say 'Keep trying' in the else part.",
+        "blocks": [
+          {
+            "label": "when \u25b6 clicked",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "set score to 7",
+            "color": "#FF8C1A"
+          },
+          {
+            "label": "if score > 5",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "say \"High score!\"",
+            "color": "#9966FF",
+            "nested": true
+          },
+          {
+            "label": "else: say \"Keep trying\"",
+            "color": "#9966FF",
+            "nested": true
+          }
+        ]
+      },
+      {
+        "title": "Try both paths",
+        "instructions": "Change the starting score to something below 5, run it again, and confirm the other message shows instead."
+      }
     ]
   }
 }
@@ -307,8 +575,30 @@ explanation, then a hands-on challenge or two.
     "conceptTitle": "Defining your own function",
     "conceptText": "Functions \u2192 'define' lets you build a named group of blocks once. Put whatever you want inside it, then use the matching call block anywhere you'd normally repeat that whole sequence.",
     "challenges": [
-      { "title": "Define a move", "instructions": "Create a function (name it something like 'spinAndSay'). Inside it: turn 90 degrees, then say 'Whee!' for 1 second." },
-      { "title": "Call it three times", "instructions": "Under 'when \u25b6 clicked', use the call block for your function three times in a row (or inside a 'repeat 3' block instead)." }
+      {
+        "title": "Define a move",
+        "instructions": "Create a function (name it something like 'spinAndSay'). Inside it: turn 90 degrees, then say 'Whee!' for 1 second.",
+        "blocks": [
+          {
+            "label": "define spinAndSay",
+            "color": "#FF6680"
+          },
+          {
+            "label": "turn 90 degrees",
+            "color": "#4C97FF",
+            "nested": true
+          },
+          {
+            "label": "say \"Whee!\" for 1 seconds",
+            "color": "#9966FF",
+            "nested": true
+          }
+        ]
+      },
+      {
+        "title": "Call it three times",
+        "instructions": "Under 'when \u25b6 clicked', use the call block for your function three times in a row (or inside a 'repeat 3' block instead)."
+      }
     ]
   }
 }
@@ -329,8 +619,34 @@ explanation, then a hands-on challenge or two.
     "conceptTitle": "Combining conditions with and / or",
     "conceptText": "The Logic category has 'and' and 'or' blocks that plug two comparisons together. 'and' needs BOTH sides true; 'or' only needs ONE side true. Drop two comparison blocks into an 'and' or 'or' block, then drop that combined result into an if block.",
     "challenges": [
-      { "title": "Check two things at once", "instructions": "Make two variables, 'score' and 'lives'. Use if (score > 5) and (lives > 0): say 'Great job!' else say 'Keep going.'" },
-      { "title": "Try 'or' instead", "instructions": "Swap the 'and' for an 'or' block and change the numbers until you can see both paths trigger." }
+      {
+        "title": "Check two things at once",
+        "instructions": "Make two variables, 'score' and 'lives'. Use if (score > 5) and (lives > 0): say 'Great job!' else say 'Keep going.'",
+        "blocks": [
+          {
+            "label": "when \u25b6 clicked",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "if (score > 5) and (lives > 0)",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "say \"Great job!\"",
+            "color": "#9966FF",
+            "nested": true
+          },
+          {
+            "label": "else: say \"Keep going.\"",
+            "color": "#9966FF",
+            "nested": true
+          }
+        ]
+      },
+      {
+        "title": "Try 'or' instead",
+        "instructions": "Swap the 'and' for an 'or' block and change the numbers until you can see both paths trigger."
+      }
     ]
   }
 }
@@ -351,8 +667,28 @@ explanation, then a hands-on challenge or two.
     "conceptTitle": "The join block",
     "conceptText": "The Text category's 'join' block sticks two pieces of text together into one. You can plug a variable (like score) into one side, mixing numbers into a sentence automatically.",
     "challenges": [
-      { "title": "Build a sentence", "instructions": "Make a variable 'score' set to 3. Use 'say (join \"Score: \" and score)' so Pixel says 'Score: 3' as one message." },
-      { "title": "Join three pieces", "instructions": "Click the join block's gear icon to add a third slot, and build a longer sentence out of three joined pieces." }
+      {
+        "title": "Build a sentence",
+        "instructions": "Make a variable 'score' set to 3. Use 'say (join \"Score: \" and score)' so Pixel says 'Score: 3' as one message.",
+        "blocks": [
+          {
+            "label": "when \u25b6 clicked",
+            "color": "#FFAB19"
+          },
+          {
+            "label": "set score to 3",
+            "color": "#FF8C1A"
+          },
+          {
+            "label": "say (join \"Score: \" score)",
+            "color": "#9966FF"
+          }
+        ]
+      },
+      {
+        "title": "Join three pieces",
+        "instructions": "Click the join block's gear icon to add a third slot, and build a longer sentence out of three joined pieces."
+      }
     ]
   }
 }

@@ -45,7 +45,17 @@ const lessons = [
       "challenges": [
         {
           "title": "Say hello",
-          "instructions": "Snap a 'say' block under 'when \u25b6 clicked' and make Pixel say hi."
+          "instructions": "Snap a 'say' block under 'when \u25b6 clicked' and make Pixel say hi.",
+          "blocks": [
+            {
+              "label": "when \u25b6 clicked",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "say \"Hi!\"",
+              "color": "#9966FF"
+            }
+          ]
         },
         {
           "title": "Take a step",
@@ -68,7 +78,22 @@ const lessons = [
       "challenges": [
         {
           "title": "Walk across",
-          "instructions": "Use 'repeat' with a 'move' block inside so Pixel walks all the way across the stage."
+          "instructions": "Use 'repeat' with a 'move' block inside so Pixel walks all the way across the stage.",
+          "blocks": [
+            {
+              "label": "when \u25b6 clicked",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "repeat 10",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "move 10 steps",
+              "color": "#4C97FF",
+              "nested": true
+            }
+          ]
         },
         {
           "title": "Turn around",
@@ -91,7 +116,27 @@ const lessons = [
       "challenges": [
         {
           "title": "Add a second look",
-          "instructions": "In the Costumes panel, add one of the built-in robot costumes so Pixel has two to switch between."
+          "instructions": "In the Costumes panel, add one of the built-in robot costumes so Pixel has two to switch between.",
+          "blocks": [
+            {
+              "label": "when \u25b6 clicked",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "forever",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "next costume",
+              "color": "#9966FF",
+              "nested": true
+            },
+            {
+              "label": "wait 0.5 seconds",
+              "color": "#FFAB19",
+              "nested": true
+            }
+          ]
         },
         {
           "title": "Animate it",
@@ -114,7 +159,17 @@ const lessons = [
       "challenges": [
         {
           "title": "Say it for two seconds",
-          "instructions": "Use 'say Hello! for 2 seconds' instead of the plain say block."
+          "instructions": "Use 'say Hello! for 2 seconds' instead of the plain say block.",
+          "blocks": [
+            {
+              "label": "when \u25b6 clicked",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "say \"Hello!\" for 2 seconds",
+              "color": "#9966FF"
+            }
+          ]
         },
         {
           "title": "Say two things in a row",
@@ -137,7 +192,17 @@ const lessons = [
       "challenges": [
         {
           "title": "Go to a corner",
-          "instructions": "Use 'go to x: 150 y: 100' to send Pixel to the upper-right area of the stage."
+          "instructions": "Use 'go to x: 150 y: 100' to send Pixel to the upper-right area of the stage.",
+          "blocks": [
+            {
+              "label": "when \u25b6 clicked",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "go to x: 150 y: 100",
+              "color": "#4C97FF"
+            }
+          ]
         },
         {
           "title": "Bounce between two spots",
@@ -160,7 +225,17 @@ const lessons = [
       "challenges": [
         {
           "title": "Play a sound on click",
-          "instructions": "Add a 'play sound' block right after 'when \u25b6 clicked'."
+          "instructions": "Add a 'play sound' block right after 'when \u25b6 clicked'.",
+          "blocks": [
+            {
+              "label": "when \u25b6 clicked",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "play sound (beep)",
+              "color": "#CF63CF"
+            }
+          ]
         },
         {
           "title": "Upload your own",
@@ -183,7 +258,25 @@ const lessons = [
       "challenges": [
         {
           "title": "Disappear and return",
-          "instructions": "Build: when \u25b6 clicked \u2192 hide \u2192 wait 1 second \u2192 show."
+          "instructions": "Build: when \u25b6 clicked \u2192 hide \u2192 wait 1 second \u2192 show.",
+          "blocks": [
+            {
+              "label": "when \u25b6 clicked",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "hide",
+              "color": "#9966FF"
+            },
+            {
+              "label": "wait 1 seconds",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "show",
+              "color": "#9966FF"
+            }
+          ]
         },
         {
           "title": "Blink three times",
@@ -206,7 +299,27 @@ const lessons = [
       "challenges": [
         {
           "title": "Walk in a square-ish loop",
-          "instructions": "Inside a forever block: move 50 steps, then turn 90 degrees. Run it and watch Pixel trace a loop around the stage."
+          "instructions": "Inside a forever block: move 50 steps, then turn 90 degrees. Run it and watch Pixel trace a loop around the stage.",
+          "blocks": [
+            {
+              "label": "when \u25b6 clicked",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "forever",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "move 50 steps",
+              "color": "#4C97FF",
+              "nested": true
+            },
+            {
+              "label": "turn 90 degrees",
+              "color": "#4C97FF",
+              "nested": true
+            }
+          ]
         },
         {
           "title": "Slow it down",
@@ -229,7 +342,17 @@ const lessons = [
       "challenges": [
         {
           "title": "Say a sum",
-          "instructions": "Drag a '+' math block into a 'say' block, set it to 2 + 3, and run it -- Pixel should say '5'."
+          "instructions": "Drag a '+' math block into a 'say' block, set it to 2 + 3, and run it -- Pixel should say '5'.",
+          "blocks": [
+            {
+              "label": "when \u25b6 clicked",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "say (2 + 3)",
+              "color": "#9966FF"
+            }
+          ]
         },
         {
           "title": "Try a bigger calculation",
@@ -275,7 +398,21 @@ const lessons = [
       "challenges": [
         {
           "title": "Make a score variable",
-          "instructions": "Create a variable called 'score', set it to 0 when \u25b6 clicked, then say the score."
+          "instructions": "Create a variable called 'score', set it to 0 when \u25b6 clicked, then say the score.",
+          "blocks": [
+            {
+              "label": "when \u25b6 clicked",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "set score to 0",
+              "color": "#FF8C1A"
+            },
+            {
+              "label": "say score",
+              "color": "#9966FF"
+            }
+          ]
         },
         {
           "title": "Start somewhere else",
@@ -298,7 +435,36 @@ const lessons = [
       "challenges": [
         {
           "title": "Count to ten",
-          "instructions": "Set score to 0, then inside a 'repeat 10' block: change score by 1, then say score, then wait 0.3 seconds."
+          "instructions": "Set score to 0, then inside a 'repeat 10' block: change score by 1, then say score, then wait 0.3 seconds.",
+          "blocks": [
+            {
+              "label": "when \u25b6 clicked",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "set score to 0",
+              "color": "#FF8C1A"
+            },
+            {
+              "label": "repeat 10",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "change score by 1",
+              "color": "#FF8C1A",
+              "nested": true
+            },
+            {
+              "label": "say score",
+              "color": "#9966FF",
+              "nested": true
+            },
+            {
+              "label": "wait 0.3 seconds",
+              "color": "#FFAB19",
+              "nested": true
+            }
+          ]
         },
         {
           "title": "Count by twos",
@@ -321,7 +487,31 @@ const lessons = [
       "challenges": [
         {
           "title": "Check a score",
-          "instructions": "Set score to 7. Use 'if score > 5' with an else: say 'High score!' in the if part, say 'Keep trying' in the else part."
+          "instructions": "Set score to 7. Use 'if score > 5' with an else: say 'High score!' in the if part, say 'Keep trying' in the else part.",
+          "blocks": [
+            {
+              "label": "when \u25b6 clicked",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "set score to 7",
+              "color": "#FF8C1A"
+            },
+            {
+              "label": "if score > 5",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "say \"High score!\"",
+              "color": "#9966FF",
+              "nested": true
+            },
+            {
+              "label": "else: say \"Keep trying\"",
+              "color": "#9966FF",
+              "nested": true
+            }
+          ]
         },
         {
           "title": "Try both paths",
@@ -344,7 +534,23 @@ const lessons = [
       "challenges": [
         {
           "title": "Define a move",
-          "instructions": "Create a function (name it something like 'spinAndSay'). Inside it: turn 90 degrees, then say 'Whee!' for 1 second."
+          "instructions": "Create a function (name it something like 'spinAndSay'). Inside it: turn 90 degrees, then say 'Whee!' for 1 second.",
+          "blocks": [
+            {
+              "label": "define spinAndSay",
+              "color": "#FF6680"
+            },
+            {
+              "label": "turn 90 degrees",
+              "color": "#4C97FF",
+              "nested": true
+            },
+            {
+              "label": "say \"Whee!\" for 1 seconds",
+              "color": "#9966FF",
+              "nested": true
+            }
+          ]
         },
         {
           "title": "Call it three times",
@@ -367,7 +573,27 @@ const lessons = [
       "challenges": [
         {
           "title": "Check two things at once",
-          "instructions": "Make two variables, 'score' and 'lives'. Use if (score > 5) and (lives > 0): say 'Great job!' else say 'Keep going.'"
+          "instructions": "Make two variables, 'score' and 'lives'. Use if (score > 5) and (lives > 0): say 'Great job!' else say 'Keep going.'",
+          "blocks": [
+            {
+              "label": "when \u25b6 clicked",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "if (score > 5) and (lives > 0)",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "say \"Great job!\"",
+              "color": "#9966FF",
+              "nested": true
+            },
+            {
+              "label": "else: say \"Keep going.\"",
+              "color": "#9966FF",
+              "nested": true
+            }
+          ]
         },
         {
           "title": "Try 'or' instead",
@@ -390,7 +616,21 @@ const lessons = [
       "challenges": [
         {
           "title": "Build a sentence",
-          "instructions": "Make a variable 'score' set to 3. Use 'say (join \"Score: \" and score)' so Pixel says 'Score: 3' as one message."
+          "instructions": "Make a variable 'score' set to 3. Use 'say (join \"Score: \" and score)' so Pixel says 'Score: 3' as one message.",
+          "blocks": [
+            {
+              "label": "when \u25b6 clicked",
+              "color": "#FFAB19"
+            },
+            {
+              "label": "set score to 3",
+              "color": "#FF8C1A"
+            },
+            {
+              "label": "say (join \"Score: \" score)",
+              "color": "#9966FF"
+            }
+          ]
         },
         {
           "title": "Join three pieces",
