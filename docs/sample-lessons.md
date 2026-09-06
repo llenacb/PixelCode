@@ -314,4 +314,49 @@ explanation, then a hands-on challenge or two.
 }
 ```
 
+## Lesson 15: Both Must Be True
+
+```json
+{
+  "title": "Both Must Be True",
+  "tier": "intermediate",
+  "order": 5,
+  "suggestedMinutes": 25,
+  "published": true,
+  "content": {
+    "introTitle": "Sometimes one check isn't enough",
+    "introText": "Pixel wants to say 'Perfect score!' only when TWO things are both true at once -- not just one of them.",
+    "conceptTitle": "Combining conditions with and / or",
+    "conceptText": "The Logic category has 'and' and 'or' blocks that plug two comparisons together. 'and' needs BOTH sides true; 'or' only needs ONE side true. Drop two comparison blocks into an 'and' or 'or' block, then drop that combined result into an if block.",
+    "challenges": [
+      { "title": "Check two things at once", "instructions": "Make two variables, 'score' and 'lives'. Use if (score > 5) and (lives > 0): say 'Great job!' else say 'Keep going.'" },
+      { "title": "Try 'or' instead", "instructions": "Swap the 'and' for an 'or' block and change the numbers until you can see both paths trigger." }
+    ]
+  }
+}
+```
+
+## Lesson 16: Mix and Match Text
+
+```json
+{
+  "title": "Mix and Match Text",
+  "tier": "intermediate",
+  "order": 6,
+  "suggestedMinutes": 20,
+  "published": true,
+  "content": {
+    "introTitle": "Pixel wants to build a sentence out of pieces",
+    "introText": "So far, 'say' blocks have shown one whole message at a time. Today Pixel learns to glue pieces of text (and numbers) together into a single message.",
+    "conceptTitle": "The join block",
+    "conceptText": "The Text category's 'join' block sticks two pieces of text together into one. You can plug a variable (like score) into one side, mixing numbers into a sentence automatically.",
+    "challenges": [
+      { "title": "Build a sentence", "instructions": "Make a variable 'score' set to 3. Use 'say (join \"Score: \" and score)' so Pixel says 'Score: 3' as one message." },
+      { "title": "Join three pieces", "instructions": "Click the join block's gear icon to add a third slot, and build a longer sentence out of three joined pieces." }
+    ]
+  }
+}
+```
+
+
 

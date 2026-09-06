@@ -1,17 +1,12 @@
 // One-time import/update script for PixelCode's sample lessons.
 //
 // Safe to re-run: matches existing lessons BY TITLE and updates them in
-// place (so re-running after editing a lesson's content, or after adding
-// a new field like suggestedMinutes, doesn't create duplicates); lessons
-// that don't exist yet get created fresh.
+// place; lessons that don't exist yet get created fresh.
 //
 // Setup (one-time):
 //   1. Firebase console -> Project settings -> Service accounts ->
-//      "Generate new private key" -> save the downloaded file as
-//      scripts/serviceAccountKey.json (this exact path is gitignored --
-//      never commit it, it's a full-admin credential for your project).
-//   2. From the project root: npm install   (pulls in firebase-admin,
-//      already added to package.json's devDependencies)
+//      "Generate new private key" -> save as scripts/serviceAccountKey.json
+//   2. npm install
 //
 // Run:
 //   node scripts/import-lessons.cjs
@@ -354,6 +349,52 @@ const lessons = [
         {
           "title": "Call it three times",
           "instructions": "Under 'when \u25b6 clicked', use the call block for your function three times in a row (or inside a 'repeat 3' block instead)."
+        }
+      ]
+    }
+  },
+  {
+    "title": "Both Must Be True",
+    "tier": "intermediate",
+    "order": 5,
+    "suggestedMinutes": 25,
+    "published": true,
+    "content": {
+      "introTitle": "Sometimes one check isn't enough",
+      "introText": "Pixel wants to say 'Perfect score!' only when TWO things are both true at once -- not just one of them.",
+      "conceptTitle": "Combining conditions with and / or",
+      "conceptText": "The Logic category has 'and' and 'or' blocks that plug two comparisons together. 'and' needs BOTH sides true; 'or' only needs ONE side true. Drop two comparison blocks into an 'and' or 'or' block, then drop that combined result into an if block.",
+      "challenges": [
+        {
+          "title": "Check two things at once",
+          "instructions": "Make two variables, 'score' and 'lives'. Use if (score > 5) and (lives > 0): say 'Great job!' else say 'Keep going.'"
+        },
+        {
+          "title": "Try 'or' instead",
+          "instructions": "Swap the 'and' for an 'or' block and change the numbers until you can see both paths trigger."
+        }
+      ]
+    }
+  },
+  {
+    "title": "Mix and Match Text",
+    "tier": "intermediate",
+    "order": 6,
+    "suggestedMinutes": 20,
+    "published": true,
+    "content": {
+      "introTitle": "Pixel wants to build a sentence out of pieces",
+      "introText": "So far, 'say' blocks have shown one whole message at a time. Today Pixel learns to glue pieces of text (and numbers) together into a single message.",
+      "conceptTitle": "The join block",
+      "conceptText": "The Text category's 'join' block sticks two pieces of text together into one. You can plug a variable (like score) into one side, mixing numbers into a sentence automatically.",
+      "challenges": [
+        {
+          "title": "Build a sentence",
+          "instructions": "Make a variable 'score' set to 3. Use 'say (join \"Score: \" and score)' so Pixel says 'Score: 3' as one message."
+        },
+        {
+          "title": "Join three pieces",
+          "instructions": "Click the join block's gear icon to add a third slot, and build a longer sentence out of three joined pieces."
         }
       ]
     }

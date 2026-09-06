@@ -306,6 +306,9 @@ export const TOOLBOX_XML = `
     <block type="text"></block>
     <block type="text_join"></block>
     <block type="text_length"></block>
+    <block type="text_charAt"></block>
+    <block type="text_getSubstring"></block>
+    <block type="text_indexOf"></block>
   </category>
 </xml>
 `;
