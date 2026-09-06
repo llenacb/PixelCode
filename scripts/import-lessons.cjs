@@ -265,6 +265,98 @@ const lessons = [
         }
       ]
     }
+  },
+  {
+    "title": "Keeping Score",
+    "tier": "intermediate",
+    "order": 1,
+    "suggestedMinutes": 20,
+    "published": true,
+    "content": {
+      "introTitle": "Pixel wants to remember things",
+      "introText": "Every block so far ran and then forgot what happened. Today Pixel learns to remember a number using a variable -- like a labeled box that holds a value.",
+      "conceptTitle": "Creating and setting a variable",
+      "conceptText": "Click Variables \u2192 Make a Variable, name it 'score'. Use 'set score to 0' to give it a starting value, and drag the 'score' block itself into a 'say' block to show what it's holding.",
+      "challenges": [
+        {
+          "title": "Make a score variable",
+          "instructions": "Create a variable called 'score', set it to 0 when \u25b6 clicked, then say the score."
+        },
+        {
+          "title": "Start somewhere else",
+          "instructions": "Change the starting value to something other than 0 and run it again -- notice the say block shows the new number automatically."
+        }
+      ]
+    }
+  },
+  {
+    "title": "Counting Up",
+    "tier": "intermediate",
+    "order": 2,
+    "suggestedMinutes": 20,
+    "published": true,
+    "content": {
+      "introTitle": "A score that only ever starts at zero isn't very useful",
+      "introText": "Pixel wants the score to actually go up each time something happens -- not stay stuck at whatever it started at.",
+      "conceptTitle": "The change-variable-by block",
+      "conceptText": "'Change score by 1' adds 1 to whatever score currently is, instead of overwriting it like 'set' does. Put it inside a loop to watch a number climb.",
+      "challenges": [
+        {
+          "title": "Count to ten",
+          "instructions": "Set score to 0, then inside a 'repeat 10' block: change score by 1, then say score, then wait 0.3 seconds."
+        },
+        {
+          "title": "Count by twos",
+          "instructions": "Change the 'change score by' amount to 2 instead of 1, and see how the counting changes."
+        }
+      ]
+    }
+  },
+  {
+    "title": "Higher or Lower",
+    "tier": "intermediate",
+    "order": 3,
+    "suggestedMinutes": 25,
+    "published": true,
+    "content": {
+      "introTitle": "Pixel needs to make a decision",
+      "introText": "So far every block always ran, no matter what. Today Pixel learns to check something first, and only do certain blocks if that check is true.",
+      "conceptTitle": "The if block and comparisons",
+      "conceptText": "The Logic category has a '>' (greater than) block, and Control has an 'if' block with a spot for that comparison. Click the gear/blue icon on the if block to add an 'else' part, so Pixel can do one thing OR another.",
+      "challenges": [
+        {
+          "title": "Check a score",
+          "instructions": "Set score to 7. Use 'if score > 5' with an else: say 'High score!' in the if part, say 'Keep trying' in the else part."
+        },
+        {
+          "title": "Try both paths",
+          "instructions": "Change the starting score to something below 5, run it again, and confirm the other message shows instead."
+        }
+      ]
+    }
+  },
+  {
+    "title": "Pixel's Own Move",
+    "tier": "intermediate",
+    "order": 4,
+    "suggestedMinutes": 25,
+    "published": true,
+    "content": {
+      "introTitle": "Some things Pixel does again and again",
+      "introText": "If a spin-and-say routine happens three times in your project, you'd normally have to build those same blocks three separate times. There's a better way.",
+      "conceptTitle": "Defining your own function",
+      "conceptText": "Functions \u2192 'define' lets you build a named group of blocks once. Put whatever you want inside it, then use the matching call block anywhere you'd normally repeat that whole sequence.",
+      "challenges": [
+        {
+          "title": "Define a move",
+          "instructions": "Create a function (name it something like 'spinAndSay'). Inside it: turn 90 degrees, then say 'Whee!' for 1 second."
+        },
+        {
+          "title": "Call it three times",
+          "instructions": "Under 'when \u25b6 clicked', use the call block for your function three times in a row (or inside a 'repeat 3' block instead)."
+        }
+      ]
+    }
   }
 ];
 

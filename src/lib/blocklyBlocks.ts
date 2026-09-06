@@ -273,6 +273,7 @@ export const TOOLBOX_XML = `
     <block type="control_wait"><value name="SECS"><shadow type="math_number"><field name="NUM">1</field></shadow></value></block>
     <block type="control_repeat"><value name="TIMES"><shadow type="math_number"><field name="NUM">10</field></shadow></value></block>
     <block type="control_forever"></block>
+    <block type="controls_if"></block>
   </category>
   <category name="Sound" colour="${SOUND_COLOUR}">
     <block type="sound_play"></block>
